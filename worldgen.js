@@ -158,6 +158,8 @@ function gen_3()
 	rooms[1].object = new THREE.Mesh(new THREE.CubeGeometry(1, 1, 1), rooms[2].materials[0]);
 	rooms[2].object = new THREE.Mesh(new THREE.CubeGeometry(1, 1, 1), rooms[0].materials[0]);
 
+	assignObjects(rooms);
+
 	for(i = 0; i < rooms.length; i ++) {
 		rooms[i].buildGeometry();
 	}
@@ -166,6 +168,12 @@ function gen_3()
 }
 
 function gen_4() {
+	while(scene.children.length > 0) {
+		var child = scene.children[scene.children.length - 1];
+		scene.remove(child);
+		//renderer.deallocateObject(child);
+	}
+
 	var rooms = new Array();
 	for (var c = 0; c < 5; c++) {
 		rooms[c] = new Room(colors[c]);
@@ -189,6 +197,8 @@ function gen_4() {
 	rooms[4].paths[NORTH] = new Path(rooms[0], NORTH);
 	rooms[4].paths[SOUTH] = new Path(rooms[1], SOUTH);
 
+	assignObjects(rooms);
+
 	for(i = 0; i < rooms.length; i ++) {
 		rooms[i].buildGeometry();
 	}
@@ -197,6 +207,12 @@ function gen_4() {
 }
 
 function gen_5() {
+	while(scene.children.length > 0) {
+		var child = scene.children[scene.children.length - 1];
+		scene.remove(child);
+		//renderer.deallocateObject(child);
+	}
+
 	var rooms = new Array();
 	for (var c = 0; c < 8; c++) {
 		rooms[c] = new Room(colors[c]);
@@ -226,6 +242,8 @@ function gen_5() {
 
 	rooms[7].paths[NORTH] = new Path(rooms[4], NORTH);
 	rooms[7].paths[EAST] = new Path(rooms[3], EAST);
+
+	assignObjects(rooms);
 
 	for(i = 0; i < rooms.length; i ++) {
 		rooms[i].buildGeometry();
