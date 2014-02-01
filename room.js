@@ -180,7 +180,9 @@ Room.prototype.buildFirsthand = function(scene, angle) {
 	var mesh = THREE.SceneUtils.createMultiMaterialObject(this.geometry, this.materials);
 	mesh.rotation.y = angle * Math.PI/2;
 	scene.add(mesh);
-	if(this.object != null) {
+	if (this.object != null) {
+		this.object.position.x = 0;
+		this.object.position.z = 0;
 		scene.add(this.object);
 	}
 	for (var c = 0; c < 4; c++) {
@@ -200,6 +202,14 @@ Room.prototype.buildSecondhand = function(scene, angle, side) {
 		mesh.position.x = (side-2)*ROOM_WIDTH;
 	}
 	scene.add(mesh);
+	if (this.object != null) {
+		if (side%2 == 0) {
+			this.object.position.z = (side-1)*ROOM_WIDTH;
+		} else {
+			this.object.position.x = (side-2)*ROOM_WIDTH;
+		}
+		scene.add(this.object);
+	}
 
 	for (var c = 0; c < 4; c++) {
 		var path = this.paths[c];
