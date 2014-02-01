@@ -7,9 +7,14 @@ ROOM_HEIGHT = 10;
 ROOM_WIDTH = 10;
 ROOM_OFFSET = ROOM_WIDTH/2;
 ROOM_TOLERANCE = .2;	//How close to the wall you can get
+
 DOOR_WIDTH = 2;
 DOOR_HEIGHT = 2*DOOR_WIDTH;
 DOOR_OFFSET = DOOR_WIDTH/2;
+
+FRAME_OFFSET = .3;
+FRAME_DEPTH = .15;
+
 
 DOOR_GEOM = new THREE.Geometry();
 DOOR_GEOM.vertices.push(new THREE.Vector3(-DOOR_OFFSET, 0, -ROOM_OFFSET));
@@ -19,10 +24,57 @@ DOOR_GEOM.vertices.push(new THREE.Vector3(-DOOR_OFFSET, DOOR_HEIGHT, -ROOM_OFFSE
 DOOR_GEOM.faces.push(new THREE.Face3(0,1,2));
 DOOR_GEOM.faces.push(new THREE.Face3(2,3,0));
 
+FRAME_GEOM = new THREE.Geometry();
+FRAME_GEOM.vertices.push(new THREE.Vector3(DOOR_OFFSET - FRAME_DEPTH, 0, -ROOM_OFFSET + FRAME_DEPTH));
+FRAME_GEOM.vertices.push(new THREE.Vector3(DOOR_OFFSET + FRAME_DEPTH, 0, -ROOM_OFFSET + FRAME_DEPTH));
+FRAME_GEOM.vertices.push(new THREE.Vector3(DOOR_OFFSET + FRAME_DEPTH, 0, -ROOM_OFFSET));
+FRAME_GEOM.vertices.push(new THREE.Vector3(DOOR_OFFSET - FRAME_DEPTH, 0, -ROOM_OFFSET));
+
+
+FRAME_GEOM.vertices.push(new THREE.Vector3(DOOR_OFFSET - FRAME_DEPTH, DOOR_HEIGHT - FRAME_DEPTH, -ROOM_OFFSET + FRAME_DEPTH));
+FRAME_GEOM.vertices.push(new THREE.Vector3(DOOR_OFFSET + FRAME_DEPTH, DOOR_HEIGHT + FRAME_DEPTH, -ROOM_OFFSET + FRAME_DEPTH));
+FRAME_GEOM.vertices.push(new THREE.Vector3(DOOR_OFFSET + FRAME_DEPTH, DOOR_HEIGHT + FRAME_DEPTH, -ROOM_OFFSET));
+FRAME_GEOM.vertices.push(new THREE.Vector3(DOOR_OFFSET - FRAME_DEPTH, DOOR_HEIGHT - FRAME_DEPTH, -ROOM_OFFSET));
+
+FRAME_GEOM.faces.push(new THREE.Face3(0,1,4));
+FRAME_GEOM.faces.push(new THREE.Face3(1,5,4));
+FRAME_GEOM.faces.push(new THREE.Face3(1,2,6));
+FRAME_GEOM.faces.push(new THREE.Face3(6,5,1));
+FRAME_GEOM.faces.push(new THREE.Face3(3,0,4));
+FRAME_GEOM.faces.push(new THREE.Face3(4,7,3));
+
+
+FRAME_GEOM.vertices.push(new THREE.Vector3(-DOOR_OFFSET - FRAME_DEPTH, DOOR_HEIGHT + FRAME_DEPTH, -ROOM_OFFSET + FRAME_DEPTH));
+FRAME_GEOM.vertices.push(new THREE.Vector3(-DOOR_OFFSET + FRAME_DEPTH, DOOR_HEIGHT - FRAME_DEPTH, -ROOM_OFFSET + FRAME_DEPTH));
+FRAME_GEOM.vertices.push(new THREE.Vector3(-DOOR_OFFSET + FRAME_DEPTH, DOOR_HEIGHT - FRAME_DEPTH, -ROOM_OFFSET));
+FRAME_GEOM.vertices.push(new THREE.Vector3(-DOOR_OFFSET - FRAME_DEPTH, DOOR_HEIGHT + FRAME_DEPTH, -ROOM_OFFSET));
+
+FRAME_GEOM.faces.push(new THREE.Face3(5,6,11));
+FRAME_GEOM.faces.push(new THREE.Face3(11,8,5));
+FRAME_GEOM.faces.push(new THREE.Face3(5,8,9));
+FRAME_GEOM.faces.push(new THREE.Face3(9,4,5));
+FRAME_GEOM.faces.push(new THREE.Face3(9,10,7));
+FRAME_GEOM.faces.push(new THREE.Face3(7,4,9));
+
+FRAME_GEOM.vertices.push(new THREE.Vector3(-DOOR_OFFSET - FRAME_DEPTH, 0, -ROOM_OFFSET + FRAME_DEPTH));
+FRAME_GEOM.vertices.push(new THREE.Vector3(-DOOR_OFFSET + FRAME_DEPTH, 0, -ROOM_OFFSET + FRAME_DEPTH));
+FRAME_GEOM.vertices.push(new THREE.Vector3(-DOOR_OFFSET + FRAME_DEPTH, 0, -ROOM_OFFSET));
+FRAME_GEOM.vertices.push(new THREE.Vector3(-DOOR_OFFSET - FRAME_DEPTH, 0, -ROOM_OFFSET));
+
+FRAME_GEOM.faces.push(new THREE.Face3(8,11,15));
+FRAME_GEOM.faces.push(new THREE.Face3(15,12,8));
+FRAME_GEOM.faces.push(new THREE.Face3(8,12,13));
+FRAME_GEOM.faces.push(new THREE.Face3(13,9,8));
+FRAME_GEOM.faces.push(new THREE.Face3(13,14,10));
+FRAME_GEOM.faces.push(new THREE.Face3(10,8,13));
+
+
 function Room(pcolor) {
 	this.paths = new Array(null, null, null, null);
 	// this.materials = [new THREE.MeshBasicMaterial( {color: pcolor, transparent: true, blending: THREE.MultiplyBlending}), new THREE.MeshDepthMaterial()];
-	this.materials = [new THREE.ShaderMaterial(	
+	//new THREE.MeshBasicMaterial({wireframe: true, color: 0xFF0000}),
+	this.materials = [
+	new THREE.ShaderMaterial(	
 	{
 		uniforms: {
 			"mNear": { type: "f", value: 1.0 },
@@ -187,8 +239,12 @@ Room.prototype.buildFirsthand = function(scene, angle) {
 	}
 	for (var c = 0; c < 4; c++) {
 		var path = this.paths[c];
-		if (path != null)
+		if (path != null) {
+			mesh = new THREE.Mesh(FRAME_GEOM, path.to_room.materials[0]);
+			mesh.rotation.y = (angle + c) * Math.PI / 2;
+			scene.add(mesh);
 			path.to_room.buildSecondhand(scene, angle+2+c-path.to_door, (angle+c)%4);
+		}
 	}
 }
 
@@ -212,16 +268,26 @@ Room.prototype.buildSecondhand = function(scene, angle, side) {
 	}
 
 	for (var c = 0; c < 4; c++) {
-		var path = this.paths[c];
-		if (path != null) {
-			mesh = path.to_room.makeDoor();
-			mesh.rotation.y = (angle+c) * Math.PI/2;
-			if (side%2 == 0) {
-				mesh.position.z = (side-1)*ROOM_WIDTH;
-			} else {
-				mesh.position.x = (side-2)*ROOM_WIDTH;
+		if((6 + side - angle) % 4 != c) {	
+			var path = this.paths[c];
+			if (path != null) {
+				mesh = path.to_room.makeDoor();
+				mesh.rotation.y = (angle+c) * Math.PI/2;
+				if (side%2 == 0) {
+					mesh.position.z = (side-1)*ROOM_WIDTH;
+				} else {
+					mesh.position.x = (side-2)*ROOM_WIDTH;
+				}
+				scene.add(mesh);
+				mesh = new THREE.Mesh(FRAME_GEOM, path.to_room.materials[0]);
+				mesh.rotation.y = (angle + c) * Math.PI / 2;
+				if (side%2 == 0) {
+					mesh.position.z = (side-1)*ROOM_WIDTH;
+				} else {
+					mesh.position.x = (side-2)*ROOM_WIDTH;
+				}
+				scene.add(mesh);
 			}
-			scene.add(mesh);
 		}
 	}
 }
