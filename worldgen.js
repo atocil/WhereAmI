@@ -272,7 +272,7 @@ function gen_menu() {
 	rooms[0].paths[NORTH] = new Path(rooms[1], NORTH);
 
 	
-	rooms[1].paths[SOUTH] = new Path(rooms[3], WEST);
+	rooms[0].paths[SOUTH] = new Path(rooms[3], WEST);
 	rooms[1].paths[WEST] = new Path(rooms[2], NORTH);
 	rooms[1].paths[EAST] = new Path(rooms[4], EAST);
 
