@@ -180,7 +180,9 @@ Room.prototype.buildFirsthand = function(scene, angle) {
 	var mesh = THREE.SceneUtils.createMultiMaterialObject(this.geometry, this.materials);
 	mesh.rotation.y = angle * Math.PI/2;
 	scene.add(mesh);
-	scene.add(this.object);
+	if(this.object != null) {
+		scene.add(this.object);
+	}
 	for (var c = 0; c < 4; c++) {
 		var path = this.paths[c];
 		if (path != null)

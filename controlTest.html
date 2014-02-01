@@ -60,9 +60,25 @@
 
 			function attemptGrab()
 			{
-				var temp = holding;
-				holding = theRoom.object;
-				theRoom.object = temp;
+				if(!holdingSomething) {
+					holding = theRoom.object;
+					theRoom.object = null;
+					holdingSomething = true;
+					scene.remove(holding);
+				}
+				else if(theRoom.object == null) {
+					theRoom.object = holding;
+					holding = null;
+					holdingSomething = false;
+					scene.add(theRoom.object);
+				}
+				else {
+					var temp = holding;
+					holding = theRoom.object;
+					theRoom.object = temp;
+					scene.remove(holding);
+					scene.add(theRoom.object);
+				}
 			}
 
 			document.onkeydown = function(down) {
@@ -161,32 +177,32 @@
 					camera.position.x += Math.cos( (Math.PI / 2) + camera.rotation.y) / 5;
 	                camera.position.z -= Math.sin( (Math.PI / 2) + camera.rotation.y) / 5;
 	                if(holdingSomething) {
-						holding.position.x += Math.cos( (Math.PI / 2) + camera.rotation.y) / 5;
-	                	holding.position.z -= Math.sin( (Math.PI / 2) + camera.rotation.y) / 5;
+						// holding.position.x += Math.cos( (Math.PI / 2) + camera.rotation.y) / 5;
+	                	// holding.position.z -= Math.sin( (Math.PI / 2) + camera.rotation.y) / 5;
 	                }
 				}
 				if(sIsPressed == true) {
                 	camera.position.x += Math.cos( (-Math.PI / 2) + camera.rotation.y) / 5;
                 	camera.position.z -= Math.sin( (-Math.PI / 2) + camera.rotation.y) / 5;
                 	if(holdingSomething) {
-						holding.position.x += Math.cos( (-Math.PI / 2) + camera.rotation.y) / 5;
-	                	holding.position.z -= Math.sin( (-Math.PI / 2) + camera.rotation.y) / 5;
+						// holding.position.x += Math.cos( (-Math.PI / 2) + camera.rotation.y) / 5;
+	                	// holding.position.z -= Math.sin( (-Math.PI / 2) + camera.rotation.y) / 5;
 	                }
 				}
 				if(aIsPressed == true) {
 					camera.position.x -= Math.cos(camera.rotation.y) / 10;
 	                camera.position.z += Math.sin(camera.rotation.y) / 10;
 	                if(holdingSomething) {
-	                	holding.position.x -= Math.cos(camera.rotation.y) / 10;
-	                	holding.position.z += Math.sin(camera.rotation.y) / 10;
+	                	// holding.position.x -= Math.cos(camera.rotation.y) / 10;
+	                	// holding.position.z += Math.sin(camera.rotation.y) / 10;
 	                }
 				}
 				if(dIsPressed == true) {
 	                camera.position.x += Math.cos(camera.rotation.y) / 10;
                 	camera.position.z -= Math.sin(camera.rotation.y) / 10;
                 	if(holdingSomething) {
-                		holding.position.x += Math.cos(camera.rotation.y) / 10;
-                		holding.position.z -= Math.sin(camera.rotation.y) / 10;
+                		// holding.position.x += Math.cos(camera.rotation.y) / 10;
+                		// holding.position.z -= Math.sin(camera.rotation.y) / 10;
                 	}
 				}
 				// if(lShiftIsPressed == true) {
