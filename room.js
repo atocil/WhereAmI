@@ -21,7 +21,43 @@ DOOR_GEOM.faces.push(new THREE.Face3(2,3,0));
 
 function Room(pcolor) {
 	this.paths = new Array(null, null, null, null);
-	this.materials = [new THREE.MeshBasicMaterial({color: pcolor}), new THREE.MeshBasicMaterial({color:0x000000, wireframe:true})];
+	this.materials = [new THREE.ShaderMaterial(	
+	{
+		uniforms: {
+
+			"mNear": { type: "v3", value: new THREE.Vector3( (pcolor & 0x110000) / 255, (pcolor & 0x001100) / 255, (pcolor & 0x000011) / 255 ) },
+			"mFar" : { type: "v3", value: new THREE.Vector3( 0 ) },
+			"opacity" : { type: "f", value: 1.0 }
+
+		},
+
+		vertexShader: [
+
+			"void main() {",
+
+				"gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );",
+
+			"}"
+
+		].join("\n"),
+
+		fragmentShader: [
+
+			"uniform vec3 mNear;",
+			"uniform vec3 mFar;",
+			"uniform float opacity;",
+
+			"void main() {",
+
+				"float depth = gl_FragCoord.z / gl_FragCoord.w;",
+				"vec3 color = vec3( smoothstep(mNear.x, mFar.x, depth ), smoothstep(mNear.y, mFar.y, depth ), smoothstep(mNear.z, mFar.z, depth ));",
+				"gl_FragColor = vec4( color, opacity );",
+
+			"}"
+
+		].join("\n")
+
+	})];
 	this.visited = false;
 	this.geometry = null;
 	this.object = null;
@@ -128,6 +164,17 @@ Room.prototype.visit = function() {
 }
 
 Room.prototype.buildFirsthand = function(scene, angle) {
+	var directionalLight = new THREE.DirectionalLight( 0xffffff, 0.9 );
+	directionalLight.position.set( 0, 4, 8 );
+
+	
+	directionalLight.castShadow = true;
+	//this.castShadow = true;
+	this.receiveShadow = true;
+	scene.add( directionalLight );
+
+
+
 	var mesh = THREE.SceneUtils.createMultiMaterialObject(this.geometry, this.materials);
 	mesh.rotation.y = angle * Math.PI/2;
 	scene.add(mesh);
@@ -140,6 +187,7 @@ Room.prototype.buildFirsthand = function(scene, angle) {
 }
 
 Room.prototype.buildSecondhand = function(scene, angle, side) {
+	scene.add( new THREE.AmbientLight(0x444444) );
 	var mesh = new THREE.Mesh(this.geometry, this.materials[0]);
 	mesh.rotation.y = angle * Math.PI/2;
 	if (side%2 == 0) {
