@@ -34,35 +34,36 @@
 
 
 			//var rooms = gen_test_6_2();
-			var rooms = gen_menu();
-			var theRoom = rooms[0];
+			
+			var rooms;
+			var theRoom;
 
-			var angle = 0;
-			theRoom.buildFirsthand(scene, angle);
+			var angle;
 
 			camera.position.x = 0;
 			camera.position.y = 2.6;
 			camera.position.z = 0;
 
-			var radius = 10;
-
-			var wIsPressed = false;
-			var sIsPressed = false; 
-			var aIsPressed = false;
-			var dIsPressed = false;
-			var lShiftIsPressed = false;
-			var spaceIsPressed = false;
+			var wIsPressed;
+			var sIsPressed;
+			var aIsPressed;
+			var dIsPressed;
+			var lShiftIsPressed;
+			var spaceIsPressed;
 
 			var HOLDING_Z_OFFSET = 1;
 
 			var mouseX;
 			var mouseY;
 
-			var dVert = .1;
-			var theta = 0;
-			var dTheta = .03;
+			var dVert;
+			var theta;
+			var dTheta;
 			var mouseXOld;
 			var mouseYOld;
+			runGen(gen_menu);
+
+			
 
 			function attemptGrab() {
 				if(holding == null) {
@@ -137,11 +138,17 @@
 					}
 				}
 
+				var oldAngle = angle;
 				if(camera.position.x > ROOM_OFFSET - ROOM_TOLERANCE) {
 					if(camera.position.z > -DOOR_OFFSET + ROOM_TOLERANCE 
 						&& camera.position.z < DOOR_OFFSET - ROOM_TOLERANCE
 						&& rebuild(3) ) {
-							camera.position.x = -ROOM_OFFSET + ROOM_TOLERANCE;
+							if((menu)) {
+								menu = false;
+								runGen(gen_3);
+							} else {
+								camera.position.x = -ROOM_OFFSET + ROOM_TOLERANCE;
+							}
 					} else {
 						camera.position.x = ROOM_OFFSET - ROOM_TOLERANCE;
 					}
@@ -150,7 +157,12 @@
 					if(camera.position.z > -DOOR_OFFSET + ROOM_TOLERANCE 
 						&& camera.position.z < DOOR_OFFSET - ROOM_TOLERANCE
 						&& rebuild(1) ) {
-							camera.position.x = ROOM_OFFSET - ROOM_TOLERANCE;
+							if(menu) {
+								menu = false;
+								runGen(gen_1);
+							} else {
+								camera.position.x = ROOM_OFFSET - ROOM_TOLERANCE;
+							}
 					} else {
 						camera.position.x = -ROOM_OFFSET + ROOM_TOLERANCE;
 					}
@@ -159,6 +171,7 @@
 					if(camera.position.x > -DOOR_OFFSET + ROOM_TOLERANCE 
 						&& camera.position.x < DOOR_OFFSET - ROOM_TOLERANCE
 						&& rebuild(2) ) {
+							menu = false;
 							camera.position.z = -ROOM_OFFSET + ROOM_TOLERANCE;
 					} else {
 						camera.position.z = ROOM_OFFSET - ROOM_TOLERANCE;
@@ -168,7 +181,12 @@
 					if(camera.position.x > -DOOR_OFFSET + ROOM_TOLERANCE
 						&& camera.position.x < DOOR_OFFSET - ROOM_TOLERANCE
 						&& rebuild(0) ) {
-							camera.position.z = ROOM_OFFSET - ROOM_TOLERANCE;
+							if((menu)  && oldAngle == 2) {
+								menu = false;
+								runGen(gen_2);
+							} else {
+								camera.position.z = ROOM_OFFSET - ROOM_TOLERANCE;
+							}
 					} else {					
 						camera.position.z = -ROOM_OFFSET + ROOM_TOLERANCE;
 					}
@@ -181,8 +199,8 @@
 				
 				if(holding != null) {
 					holding.position.y = 1.5;
-					holding.position.x = camera.position.x - Math.sin(camera.rotation.y);
-					holding.position.z = camera.position.z - Math.cos(camera.rotation.y);
+					holding.position.x = camera.position.x - Math.sin(camera.rotation.y - Math.PI/4);
+					holding.position.z = camera.position.z - Math.cos(camera.rotation.y - Math.PI/4);
 					holding.rotation.y = camera.rotation.y;
 				}
 
@@ -239,11 +257,34 @@
 						return false;
 				}
 				alert("YOU WON!!!!");
+				menu = true;
+				runGen(gen_menu);
+			}
 
-				rooms = gen_test_6_2();
+			function runGen(generate) {
+				rooms = generate();
+
 				theRoom = rooms[0];
-				rebuild(0);
-				return true;
+
+				angle = 0;
+				theRoom.buildFirsthand(scene, angle);
+
+				camera.position.x = 0;
+				camera.position.y = 2.6;
+				camera.position.z = 0;
+
+				radius = 10;
+
+				wIsPressed = false;
+				sIsPressed = false; 
+				aIsPressed = false;
+				dIsPressed = false;
+				lShiftIsPressed = false;
+				spaceIsPressed = false;
+
+				HOLDING_Z_OFFSET = 1;
+
+				var dVert = .1;
 			}
 
 			document.onkeydown = function(down) {
@@ -331,6 +372,7 @@
 				mouseDown = false;
 			}
 			
+
 			
 		</script>
 	</body>
