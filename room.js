@@ -69,12 +69,12 @@ FRAME_GEOM.faces.push(new THREE.Face3(10,8,13));
 
 menu = true;
 
-rightText = new THREE.Mesh(new THREE.TextGeometry("Large", {font: 'optimer', weight: 'bold', size: .6, height: .2}), new THREE.MeshBasicMaterial(0x000000));
+rightText = new THREE.Mesh(new THREE.TextGeometry("Hard", {font: 'optimer', weight: 'bold', size: .6, height: .2}), new THREE.MeshBasicMaterial(0x000000));
 rightText.rotation.y = 7*Math.PI / 4;
 rightText.position.x = ROOM_OFFSET - 1.5;
 rightText.position.y = DOOR_HEIGHT + .5;
 
-leftText = new THREE.Mesh(new THREE.TextGeometry("Small", {font: 'optimer', weight: 'bold', size: .6, height: .2}), new THREE.MeshBasicMaterial(0x000000));
+leftText = new THREE.Mesh(new THREE.TextGeometry("Easy", {font: 'optimer', weight: 'bold', size: .6, height: .2}), new THREE.MeshBasicMaterial(0x000000));
 leftText.rotation.y = Math.PI / 4;
 leftText.position.x = -ROOM_OFFSET;
 leftText.position.z = 1.2;
