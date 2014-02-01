@@ -1,0 +1,129 @@
+<html>
+	<head>
+		<title>My first Three.js app</title>
+		<style>canvas { width: 100%; height: 100% }</style>
+	</head>
+	<body>
+		<script src="https://rawgithub.com/mrdoob/three.js/master/build/three.js"></script>
+		<script>
+			//Start with 3 parts, scene, camera and renderer
+			var scene = new THREE.Scene();
+			//<FOV>, <ASPECTRATIO>, <NEARCLIP>, <FARCLIP>
+			var camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 3000 );
+
+			var renderer = new THREE.WebGLRenderer();
+			renderer.setSize( window.innerWidth, window.innerHeight );
+			document.body.appendChild( renderer.domElement );
+
+			//Add Geometry
+			var halfSize = 3;
+			var cube;
+			for(var i = -halfSize; i < halfSize; i++) {
+				for(var j = -halfSize; j < halfSize; j++) {
+					for(var k = -halfSize; k < halfSize; k++) {
+						var scale = (i + j + k + 15) / 40;
+						var geometry = new THREE.CubeGeometry(scale, scale, scale);
+						var material = new THREE.MeshBasicMaterial( { color: Math.random() * 0x440000 });
+						cube = new THREE.Mesh( geometry, material );
+						cube.position.set( i, j, k );
+						scene.add( cube );
+					}
+				}
+			}
+
+			camera.position.x = 0;
+			camera.position.y = 0;
+			camera.position.z = 0;
+
+			var radius = 10;
+			var theta = 0;
+			var dTheta = .03;
+			var t = 0;
+			var dt = .01;
+
+
+			var wIsPressed = false;
+			var sIsPressed = false; 
+			var aIsPressed = false;
+			var dIsPressed = false;
+			document.onkeydown = function(down) {
+
+				switch (down.keyCode) {
+	                case 87: // W
+	                	wIsPressed = true;
+	                break;
+
+	                case 83: // S
+	                	sIsPressed = true;
+	                break;
+
+	                case 65: // A
+	                	aIsPressed = true;
+	                break;
+
+	                case 68: // D
+	     				dIsPressed = true;
+	                break;
+
+	                case 66:
+	                	alert(camera.rotation.y);
+	                break;
+				}
+			}
+
+			document.onkeyup = function(up) {
+
+				switch (up.keyCode) {
+	                case 87: // W
+	                	wIsPressed = false;
+	                break;
+
+	                case 83: // S
+	                	sIsPressed = false;
+	                break;
+
+	                case 65: // A
+	                	aIsPressed = false;
+	                break;
+
+	                case 68: // D
+	     				dIsPressed = false;
+	                break;
+
+	                case 66:
+	                	alert(camera.rotation.y);
+	                break;
+				}
+			}
+
+			function updateCamera() {
+				if(wIsPressed == true) {
+					camera.position.x += Math.cos( (Math.PI / 2) + camera.rotation.y) / 5;
+	                camera.position.z -= Math.sin( (Math.PI / 2) + camera.rotation.y) / 5;
+				}
+				if(sIsPressed == true) {
+                	camera.position.x += Math.cos( (-Math.PI / 2) + camera.rotation.y) / 5;
+                	camera.position.z -= Math.sin( (-Math.PI / 2) + camera.rotation.y) / 5;
+				}
+				if(aIsPressed == true) {
+					camera.rotation.y += dTheta;
+				}
+				if(dIsPressed == true) {
+	                camera.rotation.y -= dTheta;
+				}
+			}
+
+			function render() {
+				t += dt;
+				requestAnimationFrame(render);
+
+				updateCamera();
+
+				renderer.render(scene, camera);
+			}
+
+			
+			render();
+		</script>
+	</body>
+</html>
