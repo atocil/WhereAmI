@@ -180,37 +180,37 @@
 				// }
 
 				if(camera.position.x > ROOM_OFFSET - ROOM_TOLERANCE) {
-					if(camera.position.z > -DOOR_OFFSET 
-						&& camera.position.z < DOOR_OFFSET) {
-						rebuild(3);
-						camera.position.x = -ROOM_OFFSET + ROOM_TOLERANCE;
+					if(camera.position.z > -DOOR_OFFSET + ROOM_TOLERANCE 
+						&& camera.position.z < DOOR_OFFSET - ROOM_TOLERANCE
+						&& rebuild(3) ) {
+							camera.position.x = -ROOM_OFFSET + ROOM_TOLERANCE;
 					} else {
 						camera.position.x = ROOM_OFFSET - ROOM_TOLERANCE;
 					}
 				}
 				if(camera.position.x < -ROOM_OFFSET + ROOM_TOLERANCE) {
-					if(camera.position.z > -DOOR_OFFSET 
-						&& camera.position.z < DOOR_OFFSET) {
-						rebuild(1);
-						camera.position.x = ROOM_OFFSET - ROOM_TOLERANCE;
+					if(camera.position.z > -DOOR_OFFSET + ROOM_TOLERANCE 
+						&& camera.position.z < DOOR_OFFSET - ROOM_TOLERANCE
+						&& rebuild(1) ) {
+							camera.position.x = ROOM_OFFSET - ROOM_TOLERANCE;
 					} else {
 						camera.position.x = -ROOM_OFFSET + ROOM_TOLERANCE;
 					}
 				}
 				if(camera.position.z > ROOM_OFFSET - ROOM_TOLERANCE) {
-					if(camera.position.x > -DOOR_OFFSET 
-						&& camera.position.x < DOOR_OFFSET) {
-						rebuild(2);
-						camera.position.z = -ROOM_OFFSET + ROOM_TOLERANCE;
+					if(camera.position.x > -DOOR_OFFSET + ROOM_TOLERANCE 
+						&& camera.position.x < DOOR_OFFSET - ROOM_TOLERANCE
+						&& rebuild(2) ) {
+							camera.position.z = -ROOM_OFFSET + ROOM_TOLERANCE;
 					} else {
 						camera.position.z = ROOM_OFFSET - ROOM_TOLERANCE;
 					}
 				}
 				if(camera.position.z < -ROOM_OFFSET + ROOM_TOLERANCE) {
-					if(camera.position.x > -DOOR_OFFSET 
-						&& camera.position.x < DOOR_OFFSET) {
-						rebuild(0);
-						camera.position.z = ROOM_OFFSET - ROOM_TOLERANCE;
+					if(camera.position.x > -DOOR_OFFSET + ROOM_TOLERANCE
+						&& camera.position.x < DOOR_OFFSET - ROOM_TOLERANCE
+						&& rebuild(0) ) {
+							camera.position.z = ROOM_OFFSET - ROOM_TOLERANCE;
 					} else {					
 						camera.position.z = -ROOM_OFFSET + ROOM_TOLERANCE;
 					}
@@ -238,10 +238,10 @@
 
 			function rebuild(side) {
 				var path = theRoom.paths[(side - angle + 4) % 4];
-				if(path.to_room != null) {
+				if(path != null) {
 					theRoom = path.to_room;
 				} else {
-					return;
+					return false;
 				}
 
 				//nuke
@@ -258,6 +258,7 @@
 				console.log("side: " + side);
 				theRoom.buildFirsthand(scene, angle);
 
+				return true;
 			}
 
 			
