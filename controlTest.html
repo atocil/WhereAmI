@@ -39,6 +39,7 @@
 			var theRoom;
 
 			var angle;
+			var lastA = false;
 
 			camera.position.x = 0;
 			camera.position.y = 2.6;
@@ -116,7 +117,7 @@
 
 					var pad = Gamepad.getStates();
 					pad = pad[0];
-					
+
 					if(pad) {
 						if(Math.abs(pad.leftStickX) > 0.2) {
 							camera.position.x += Math.cos(camera.rotation.y) * (pad.leftStickX / 4);
@@ -135,6 +136,13 @@
 						if(Math.abs(pad.rightStickY) > 0.2) {
 							camera.rotation.x -= 0.05 * pad.rightStickY;
 						}
+
+						if(pad.faceButton0) {
+							if(!lastA) {
+								attemptGrab();
+							}
+						}
+						lastA = pad.faceButton0;
 					}
 				}
 
