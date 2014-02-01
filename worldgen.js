@@ -65,25 +65,31 @@ function gen_test_6_2()
 		rooms[i] = new Room(colors[i]);
 	}
 
-	rooms[0].paths[NORTH] = new Path(5, NORTH);
-	rooms[0].paths[SOUTH] = new Path(3, NORTH);
+	rooms[0].paths[NORTH] = new Path(rooms[5], NORTH);
+	rooms[0].paths[SOUTH] = new Path(rooms[3], NORTH);
 
-	rooms[1].paths[NORTH] = new Path(4, NORTH);
-	rooms[1].paths[SOUTH] = new Path(2, SOUTH);
+	rooms[1].paths[NORTH] = new Path(rooms[4], NORTH);
+	rooms[1].paths[SOUTH] = new Path(rooms[2], SOUTH);
 
-	rooms[2].paths[NORTH] = new Path(4, NORTH);
-	rooms[2].paths[SOUTH] = new Path(5, NORTH);
+	rooms[2].paths[NORTH] = new Path(rooms[4], NORTH);
+	rooms[2].paths[SOUTH] = new Path(rooms[5], NORTH);
 
-	rooms[3].paths[NORTH] = new Path(2, NORTH);
-	rooms[3].paths[SOUTH] = new Path(0, NORTH);
+	rooms[3].paths[NORTH] = new Path(rooms[2], NORTH);
+	rooms[3].paths[SOUTH] = new Path(rooms[0], NORTH);
 
-	rooms[4].paths[NORTH] = new Path(1, NORTH);
-	rooms[4].paths[SOUTH] = new Path(3, NORTH);
+	rooms[4].paths[NORTH] = new Path(rooms[1], NORTH);
+	rooms[4].paths[SOUTH] = new Path(rooms[3], NORTH);
 
-	rooms[5].paths[NORTH] = new Path(4, NORTH);
-	rooms[5].paths[SOUTH] = new Path(3, SOUTH);
+	rooms[5].paths[NORTH] = new Path(rooms[4], NORTH);
+	rooms[5].paths[SOUTH] = new Path(rooms[3], SOUTH);
 
-	assignObjects(rooms);
+	//assignObjects(rooms);
+
+	for(i = 0; i < rooms.length; i ++) {
+		rooms[i].buildGeometry();
+	}
+
+	return rooms;
 }
 
 function assignObjects(rooms)

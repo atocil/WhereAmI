@@ -30,23 +30,8 @@
 			// directionalLight.position.set( 1, 1, 1 ).normalize();
 			// scene.add(directionalLight);
 
-			var north = new Room(0x00FF00);
-			var west  = new Room(0xFFFF00);
-			var south = new Room(0xFF0000);
-			var east  = new Room(0x0000FF);
-			var theRoom = new Room(0xFFFFFF);
-			theRoom.paths[NORTH] = new Path(north, 0);
-			theRoom.paths[WEST] = new Path(west, 1);
-			theRoom.paths[SOUTH] = new Path(south, 1);
-			theRoom.paths[EAST] = new Path(south, 3);
-			south.paths[NORTH] = new Path(theRoom, 2);
-			north.paths[WEST] = new Path(south, 1)
-
-			theRoom.buildGeometry();
-			north.buildGeometry();
-			west.buildGeometry();
-			south.buildGeometry();
-			east.buildGeometry();
+			var rooms = gen_test_6_2();
+			var theRoom = rooms[0];
 
 			var angle = 0;
 			theRoom.buildFirsthand(scene, angle);
