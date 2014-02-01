@@ -46,6 +46,8 @@ function generate_world(num_rooms, num_doors)
 	for(i = 0; i < rooms.length; i ++) {
 		rooms[i].buildGeometry();
 	}
+
+	assignObjects(rooms);
 }
 
 function reset_rooms_visited(rooms)
@@ -80,4 +82,21 @@ function gen_test_6_2()
 
 	rooms[5].paths[NORTH] = new Path(4, NORTH);
 	rooms[5].paths[SOUTH] = new Path(3, SOUTH);
+
+	assignObjects(rooms);
+}
+
+function assignObjects(rooms)
+{
+	var cubeGeom = new THREE.CubeGeometry(1, 1, 1);
+	for(var i = 0; i < rooms.length; i ++) {
+		var color_num = int(Math.random() * rooms.length);
+		while(rooms[color_num].visited) {
+			color_num = int(Math.random() * rooms.length);
+		}
+
+		rooms[color_num].visited = true;
+		rooms[i].objects = new Array();
+		rooms[i].objects[0] = new THREE.mesh(cubeGeom, rooms[color_num].materials[0]);
+	}
 }

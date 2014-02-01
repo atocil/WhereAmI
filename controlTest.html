@@ -24,6 +24,9 @@
 			renderer.setSize( window.innerWidth, window.innerHeight );
 			document.body.appendChild( renderer.domElement );
 
+			var holdingSomething = false;
+			var holding = null;
+
 			var north = new Room(0x00FF00);
 			var west  = new Room(0xFFFF00);
 			var south = new Room(0xFF0000);
@@ -72,6 +75,10 @@
 
 	                case 68: // D
 	     				dIsPressed = true;
+	                break;
+
+	                case 69: //E
+	                	attemptGrab();
 	                break;
 
 	                case 32: // Space
@@ -146,18 +153,34 @@
 				if(wIsPressed == true) {
 					camera.position.x += Math.cos( (Math.PI / 2) + camera.rotation.y) / 5;
 	                camera.position.z -= Math.sin( (Math.PI / 2) + camera.rotation.y) / 5;
+	                if(holdingSomething) {
+						holding.position.x += Math.cos( (Math.PI / 2) + camera.rotation.y) / 5;
+	                	holding.position.z -= Math.sin( (Math.PI / 2) + camera.rotation.y) / 5;
+	                }
 				}
 				if(sIsPressed == true) {
                 	camera.position.x += Math.cos( (-Math.PI / 2) + camera.rotation.y) / 5;
                 	camera.position.z -= Math.sin( (-Math.PI / 2) + camera.rotation.y) / 5;
+                	if(holdingSomething) {
+						holding.position.x += Math.cos( (-Math.PI / 2) + camera.rotation.y) / 5;
+	                	holding.position.z -= Math.sin( (-Math.PI / 2) + camera.rotation.y) / 5;
+	                }
 				}
 				if(aIsPressed == true) {
 					camera.position.x -= Math.cos(camera.rotation.y) / 10;
 	                camera.position.z += Math.sin(camera.rotation.y) / 10;
+	                if(holdingSomething) {
+	                	holding.position.x -= Math.cos(camera.rotation.y) / 10;
+	                	holding.position.z += Math.sin(camera.rotation.y) / 10;
+	                }
 				}
 				if(dIsPressed == true) {
 	                camera.position.x += Math.cos(camera.rotation.y) / 10;
                 	camera.position.z -= Math.sin(camera.rotation.y) / 10;
+                	if(holdingSomething) {
+                		holding.position.x += Math.cos(camera.rotation.y) / 10;
+                		holding.position.z -= Math.sin(camera.rotation.y) / 10;
+                	}
 				}
 				// if(lShiftIsPressed == true) {
 				// 	camera.position.y -= dVert;

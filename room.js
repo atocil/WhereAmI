@@ -23,6 +23,7 @@ function Room(pcolor) {
 	this.materials = [new THREE.MeshBasicMaterial({color: pcolor}), new THREE.MeshBasicMaterial({color:0x000000, wireframe:true})];
 	this.visited = false;
 	this.geometry = null;
+	this.objects = null;
 }
 
 Room.prototype.buildGeometry = function() {
