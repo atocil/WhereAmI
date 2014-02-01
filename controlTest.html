@@ -43,7 +43,9 @@
 			west.buildGeometry();
 			south.buildGeometry();
 			east.buildGeometry();
-			theRoom.buildFirsthand(scene, 0);
+
+			var angle = 0;
+			theRoom.buildFirsthand(scene, angle);
 
 			camera.position.x = 0;
 			camera.position.y = 2.6;
@@ -171,7 +173,7 @@
 				if(camera.position.x > ROOM_OFFSET - ROOM_TOLERANCE) {
 					if(camera.position.z > -DOOR_OFFSET 
 						&& camera.position.z < DOOR_OFFSET) {
-						//TODO TRIGGER REBUILD
+						rebuild(3);
 						camera.position.x = -ROOM_OFFSET + ROOM_TOLERANCE;
 					} else {
 						camera.position.x = ROOM_OFFSET - ROOM_TOLERANCE;
@@ -180,7 +182,7 @@
 				if(camera.position.x < -ROOM_OFFSET + ROOM_TOLERANCE) {
 					if(camera.position.z > -DOOR_OFFSET 
 						&& camera.position.z < DOOR_OFFSET) {
-						//TODO TRIGGER REBUILD
+						rebuild(1);
 						camera.position.x = ROOM_OFFSET - ROOM_TOLERANCE;
 					} else {
 						camera.position.x = -ROOM_OFFSET + ROOM_TOLERANCE;
@@ -189,7 +191,7 @@
 				if(camera.position.z > ROOM_OFFSET - ROOM_TOLERANCE) {
 					if(camera.position.x > -DOOR_OFFSET 
 						&& camera.position.x < DOOR_OFFSET) {
-						//TODO TRIGGER REBUILD
+						rebuild(2);
 						camera.position.z = -ROOM_OFFSET + ROOM_TOLERANCE;
 					} else {
 						camera.position.z = ROOM_OFFSET - ROOM_TOLERANCE;
@@ -198,7 +200,7 @@
 				if(camera.position.z < -ROOM_OFFSET + ROOM_TOLERANCE) {
 					if(camera.position.x > -DOOR_OFFSET 
 						&& camera.position.x < DOOR_OFFSET) {
-						//TODO TRIGGER REBUILD
+						rebuild(0);
 						camera.position.z = ROOM_OFFSET - ROOM_TOLERANCE;
 					} else {					
 						camera.position.z = -ROOM_OFFSET + ROOM_TOLERANCE;
@@ -223,6 +225,30 @@
 				updateCamera();
 				//console.log("x: " + camera.position.x + "   z: " + camera.position.z);
 				renderer.render(scene, camera);
+			}
+
+			function rebuild(side) {
+				var path = theRoom.paths[(side - angle + 4) % 4];
+				if(path.to_room != null) {
+					theRoom = path.to_room;
+				} else {
+					return;
+				}
+
+				//nuke
+				while(scene.children.length > 0) {
+					var child = scene.children[scene.children.length - 1];
+					scene.remove(child);
+					//renderer.deallocateObject(child);
+				}
+
+				console.log("old angle: " + angle);
+
+				angle = 2 + side - path.to_door;
+				console.log("new angle: " + angle);
+				console.log("side: " + side);
+				theRoom.buildFirsthand(scene, angle);
+
 			}
 
 			
