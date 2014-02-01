@@ -6,11 +6,11 @@ colors[2] = 0x00ff00; //GREEN
 colors[3] = 0xffff00; //YELLOW
 colors[4] = 0x00ffff; //CYAN
 colors[5] = 0xff00ff; //MAGENTA
-colors[6] = 0x
-colors[7] = 0x
-colors[8] = 0x
-colors[9] = 0x
-colors[10] = 0x
+colors[6] = 0xff8300; //ORANGE
+colors[7] = 0x4F2F4F; //VIOLET
+//colors[8] = 0x
+//colors[9] = 0x
+//colors[10] = 0x
 
 colors[11] = 0x000000; //BLACK
 colors[12] = 0xffffff; //WHITE
