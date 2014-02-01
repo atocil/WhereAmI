@@ -71,18 +71,19 @@ menu = true;
 
 rightText = new THREE.Mesh(new THREE.TextGeometry("Hard", {font: 'optimer', weight: 'bold', size: .6, height: .2}), new THREE.MeshBasicMaterial(0x000000));
 rightText.rotation.y = 7*Math.PI / 4;
-rightText.position.x = ROOM_OFFSET - 1.5;
+rightText.position.x = ROOM_OFFSET - 2;
 rightText.position.y = DOOR_HEIGHT + .5;
+rightText.position.z = -1;
 
 leftText = new THREE.Mesh(new THREE.TextGeometry("Easy", {font: 'optimer', weight: 'bold', size: .6, height: .2}), new THREE.MeshBasicMaterial(0x000000));
 leftText.rotation.y = Math.PI / 4;
 leftText.position.x = -ROOM_OFFSET;
-leftText.position.z = 1.2;
+leftText.position.z = 1;
 leftText.position.y = DOOR_HEIGHT + .5;
 
-endText = new THREE.Mesh(new THREE.TextGeometry("Medium", {font: 'optimer', weight: 'bold', size: .6, height: .2}), new THREE.MeshBasicMaterial(0x000000));
+endText = new THREE.Mesh(new THREE.TextGeometry("Hard", {font: 'optimer', weight: 'bold', size: .6, height: .2}), new THREE.MeshBasicMaterial(0x000000));
 endText.position.z = -ROOM_OFFSET;
-endText.position.x = -1.5;
+endText.position.x = -1;
 endText.position.y = DOOR_HEIGHT + .5;
 
 
@@ -272,19 +273,19 @@ Room.prototype.buildFirsthand = function(scene, angle) {
 			mesh = new THREE.Mesh(FRAME_GEOM, getDarkVariant(path.to_room.myColor));
 			mesh.rotation.y = (angle + c) * Math.PI / 2;
 			scene.add(mesh);
-			path.to_room.buildSecondhand(scene, angle+2+c-path.to_door, (angle+c)%4);
+			path.to_room.buildSecondhand(scene, angle+2+c-path.to_door, (angle+c)%4, 1);
 		}
 	}
 }
 
-Room.prototype.buildSecondhand = function(scene, angle, side) {
+Room.prototype.buildSecondhand = function(scene, angle, side, depth) {
 	scene.add( new THREE.AmbientLight(0x444444) );
 	var mesh = new THREE.Mesh(this.geometry, this.materials[0]);
 	mesh.rotation.y = angle * Math.PI/2;
 	if (side%2 == 0) {
-		mesh.position.z = (side-1)*ROOM_WIDTH;
+		mesh.position.z = (side-1)*depth*ROOM_WIDTH;
 	} else {
-		mesh.position.x = (side-2)*ROOM_WIDTH;
+		mesh.position.x = (side-2)*depth*ROOM_WIDTH;
 	}
 	scene.add(mesh);
 	//draw object copy
@@ -292,18 +293,18 @@ Room.prototype.buildSecondhand = function(scene, angle, side) {
 		mesh = this.object.clone();
 		this.copies.push(mesh);
 		if (side%2 == 0) {
-			mesh.position.z = (side-1)*ROOM_WIDTH;
+			mesh.position.z = (side-1)*depth*ROOM_WIDTH;
 		} else {
-			mesh.position.x = (side-2)*ROOM_WIDTH;
+			mesh.position.x = (side-2)*depth*ROOM_WIDTH;
 		}
 		scene.add(mesh);
 	}
 
 	//push copyloc
 	if (side%2 == 0) {
-		this.copylocs.push(new THREE.Vector3(0,0,(side-1)*ROOM_WIDTH));
+		this.copylocs.push(new THREE.Vector3(0,0,(side-1)*depth*ROOM_WIDTH));
 	} else {
-		this.copylocs.push(new THREE.Vector3((side-2)*ROOM_WIDTH,0,0));
+		this.copylocs.push(new THREE.Vector3((side-2)*depth*ROOM_WIDTH,0,0));
 	}
 
 	//draw doors and frames
@@ -311,20 +312,24 @@ Room.prototype.buildSecondhand = function(scene, angle, side) {
 		if((6 + side - angle) % 4 != c) {	
 			var path = this.paths[c];
 			if (path != null) {
-				mesh = path.to_room.makeDoor();
-				mesh.rotation.y = (angle+c) * Math.PI/2;
-				if (side%2 == 0) {
-					mesh.position.z = (side-1)*ROOM_WIDTH;
+				if (depth < 2 && c == (side-angle+4)%4) {
+					path.to_room.buildSecondhand(scene, angle+2+c-path.to_door, (angle+c)%4, depth+1);
 				} else {
-					mesh.position.x = (side-2)*ROOM_WIDTH;
+					mesh = path.to_room.makeDoor();
+					mesh.rotation.y = (angle+c) * Math.PI/2;
+					if (side%2 == 0) {
+						mesh.position.z = (side-1)*depth*ROOM_WIDTH;
+					} else {
+						mesh.position.x = (side-2)*depth*ROOM_WIDTH;
+					}
+					scene.add(mesh);
 				}
-				scene.add(mesh);
 				mesh = new THREE.Mesh(FRAME_GEOM, getDarkVariant(path.to_room.myColor));
 				mesh.rotation.y = (angle + c) * Math.PI / 2;
 				if (side%2 == 0) {
-					mesh.position.z = (side-1)*ROOM_WIDTH;
+					mesh.position.z = (side-1)*depth*ROOM_WIDTH;
 				} else {
-					mesh.position.x = (side-2)*ROOM_WIDTH;
+					mesh.position.x = (side-2)*depth*ROOM_WIDTH;
 				}
 				scene.add(mesh);
 			}
