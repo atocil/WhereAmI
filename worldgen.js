@@ -95,7 +95,7 @@ function gen_test_6_2()
 	rooms[5].paths[NORTH] = new Path(rooms[4], NORTH);
 	rooms[5].paths[SOUTH] = new Path(rooms[3], SOUTH);
 
-	//assignObjects(rooms);
+	assignObjects(rooms);
 
 	for(i = 0; i < rooms.length; i ++) {
 		rooms[i].buildGeometry();
@@ -114,7 +114,6 @@ function assignObjects(rooms)
 		}
 
 		rooms[color_num].visited = true;
-		rooms[i].objects = new Array();
-		rooms[i].objects[0] = new THREE.Mesh(cubeGeom, rooms[color_num].materials[0]);
+		rooms[i].object = new THREE.Mesh(cubeGeom, rooms[color_num].materials[0]);
 	}
 }

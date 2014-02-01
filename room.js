@@ -24,7 +24,7 @@ function Room(pcolor) {
 	this.materials = [new THREE.MeshBasicMaterial({color: pcolor}), new THREE.MeshBasicMaterial({color:0x000000, wireframe:true})];
 	this.visited = false;
 	this.geometry = null;
-	this.objects = null;
+	this.object = null;
 }
 
 Room.prototype.buildGeometry = function() {
@@ -131,6 +131,7 @@ Room.prototype.buildFirsthand = function(scene, angle) {
 	var mesh = THREE.SceneUtils.createMultiMaterialObject(this.geometry, this.materials);
 	mesh.rotation.y = angle * Math.PI/2;
 	scene.add(mesh);
+	scene.add(this.object);
 	for (var c = 0; c < 4; c++) {
 		var path = this.paths[c];
 		if (path != null)

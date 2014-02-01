@@ -1,6 +1,6 @@
 <html>
 	<head>
-		<title>My first Three.js app</title>
+		<title>Where Am I?</title>
 		<style>canvas { width: 100%; height: 100% }</style>
 	</head>
 	<body>
@@ -30,7 +30,7 @@
 			// directionalLight.position.set( 1, 1, 1 ).normalize();
 			// scene.add(directionalLight);
 
-			var rooms = generate_world(5, 3);
+			var rooms = gen_test_6_2();
 			var theRoom = rooms[0];
 
 			var angle = 0;
@@ -48,6 +48,14 @@
 			var dIsPressed = false;
 			var lShiftIsPressed = false;
 			var spaceIsPressed = false;
+
+			function attemptGrab()
+			{
+				var temp = holding;
+				holding = theRoom.object;
+				theRoom.object = temp;
+			}
+
 			document.onkeydown = function(down) {
 
 				switch (down.keyCode) {
