@@ -9,13 +9,10 @@
 		<script src="room.js"></script>
 		<script src="worldgen.js"></script>
 		<script>
-			ROOM_TOLERANCE = .1;
-
-
 			//Start with 3 parts, scene, camera and renderer
 			var scene = new THREE.Scene();
-			//<FOV>, <ASPECTRATIO>, <NEARCLIP>, <FARCLIP>
 
+			//<FOV>, <ASPECTRATIO>, <NEARCLIP>, <FARCLIP>
 			var camera = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 0.1, 20 );
 			camera.rotation = new THREE.Euler( 0, 0, 0, 'YXZ' );
 
@@ -23,7 +20,16 @@
 			renderer.setSize( window.innerWidth, window.innerHeight );
 			document.body.appendChild( renderer.domElement );
 
+			scene.add( new THREE.AmbientLight(0x0000AF) );
+
+			// var directionalLight = new THREE.DirectionalLight( 0xffffff , 10);
+			// directionalLight.position.set( 1, 1, 1 ).normalize();
+			// scene.add(directionalLight);
+			
+
 			var theRoom = new Room(0xFF0000);
+			
+
 			theRoom.paths[NORTH] = new Array();
 			theRoom.paths[WEST] = new Array();
 			theRoom.paths[SOUTH] = new Array();

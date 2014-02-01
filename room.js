@@ -6,13 +6,14 @@ EAST  = 3;
 ROOM_HEIGHT = 10;
 ROOM_WIDTH = 10;
 ROOM_OFFSET = ROOM_WIDTH/2;
+ROOM_TOLERANCE = .1;	//How close to the wall you can get
 DOOR_WIDTH = 2;
 DOOR_HEIGHT = 2*DOOR_WIDTH;
 DOOR_OFFSET = DOOR_WIDTH/2;
 
 function Room(pcolor) {
 	this.paths = new Array(null, null, null, null);
-	this.material = new THREE.MeshDepthMaterial({color: 0x00FF00})
+	this.material = new THREE.MeshLambertMaterial({color: 0x004400})
 	this.visited = false;
 	this.geometry = null;
 }
