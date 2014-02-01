@@ -18,17 +18,17 @@
 			camera.rotation = new THREE.Euler( 0, 0, 0, 'YXZ' );
 
 			var renderer = new THREE.WebGLRenderer();
-			renderer.shadowMapEnabled = true;
-			renderer.shadowMapSoft = true;
+			// renderer.shadowMapEnabled = true;
+			// renderer.shadowMapSoft = true;
 
-			renderer.shadowCameraNear = .1;
-			renderer.shadowCameraFar = camera.far;
-			renderer.shadowCameraFov = 8;
+			// renderer.shadowCameraNear = .1;
+			// renderer.shadowCameraFar = camera.far;
+			// renderer.shadowCameraFov = 8;
 
-			renderer.shadowMapBias = 0.0039;
-			renderer.shadowMapDarkness = 0.5;
-			renderer.shadowMapWidth = 1024;
-			renderer.shadowMapHeight = 1024;
+			// renderer.shadowMapBias = 0.0039;
+			// renderer.shadowMapDarkness = 0.5;
+			// renderer.shadowMapWidth = 1024;
+			// renderer.shadowMapHeight = 1024;
 			renderer.setSize( window.innerWidth, window.innerHeight );
 			document.body.appendChild( renderer.domElement );
 

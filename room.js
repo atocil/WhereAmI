@@ -21,12 +21,13 @@ DOOR_GEOM.faces.push(new THREE.Face3(2,3,0));
 
 function Room(pcolor) {
 	this.paths = new Array(null, null, null, null);
+	// this.materials = [new THREE.MeshBasicMaterial( {color: pcolor, transparent: true, blending: THREE.MultiplyBlending}), new THREE.MeshDepthMaterial()];
 	this.materials = [new THREE.ShaderMaterial(	
 	{
 		uniforms: {
-
-			"mNear": { type: "v3", value: new THREE.Vector3( (pcolor & 0x110000) / 255, (pcolor & 0x001100) / 255, (pcolor & 0x000011) / 255 ) },
-			"mFar" : { type: "v3", value: new THREE.Vector3( 0 ) },
+			"mNear": { type: "f", value: 1.0 },
+			"mFar" : { type: "f", value: 2000.0 },
+			"color": { type: "v3", value: new THREE.Vector3( ((pcolor & 0xFF0000) >> 16) / 255, ((pcolor & 0x00FF00) >> 8) / 255, (pcolor & 0x0000FF) / 255 ) },
 			"opacity" : { type: "f", value: 1.0 }
 
 		},
@@ -43,15 +44,16 @@ function Room(pcolor) {
 
 		fragmentShader: [
 
-			"uniform vec3 mNear;",
-			"uniform vec3 mFar;",
+			"uniform float mNear;",
+			"uniform float mFar;",
+			"uniform vec3 color;",
 			"uniform float opacity;",
 
 			"void main() {",
 
 				"float depth = gl_FragCoord.z / gl_FragCoord.w;",
-				"vec3 color = vec3( smoothstep(mNear.x, mFar.x, depth ), smoothstep(mNear.y, mFar.y, depth ), smoothstep(mNear.z, mFar.z, depth ));",
-				"gl_FragColor = vec4( color, opacity );",
+				"float f = 1.0 - smoothstep( mNear, mFar, depth );",
+				"gl_FragColor = vec4( vec3(f) * color, opacity );",
 
 			"}"
 
