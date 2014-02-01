@@ -98,6 +98,12 @@ function gen_1()
 
 function gen_2()
 {
+	while(scene.children.length > 0) {
+		var child = scene.children[scene.children.length - 1];
+		scene.remove(child);
+		//renderer.deallocateObject(child);
+	}
+
 	var rooms = new Array();
 
 	for(var i = 0; i < 4; i ++) {
@@ -127,6 +133,12 @@ function gen_2()
 
 function gen_3()
 {
+	while(scene.children.length > 0) {
+		var child = scene.children[scene.children.length - 1];
+		scene.remove(child);
+		//renderer.deallocateObject(child);
+	}
+
 	var rooms = new Array();
 
 	for(var i = 0; i < 3; i ++) {
