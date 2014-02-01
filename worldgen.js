@@ -3,7 +3,7 @@ function generate_world(num_rooms, num_doors)
 	var rooms = new Array();
 
 	for(var i = 0; i < num_rooms; i ++) {
-		rooms[i] = new Room();
+		rooms[i] = new Room(colors[i]);
 
 	}
 
@@ -16,7 +16,7 @@ function generate_world(num_rooms, num_doors)
 
 			//Which door this path will leave from
 			var door_num = int(Math.random() * num_doors);
-			while(temp_room.paths[door_num] == null) {
+			while(temp_room.paths[door_num] != null) {
 				door_num = int(Math.random() * num_doors);
 			}
 
@@ -41,6 +41,10 @@ function generate_world(num_rooms, num_doors)
 		temp_room.paths[door_num] = new Path(int(Math.random() * num_rooms), int(Math.random() * num_doors));
 
 		reset_rooms_visited(rooms);
+	}
+
+	for(i = 0; i < rooms.length; i ++) {
+		rooms[i].buildGeometry();
 	}
 }
 
