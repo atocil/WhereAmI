@@ -252,6 +252,97 @@ function gen_5() {
 	return rooms;
 }
 
+function gen_6() {
+	while(scene.children.length > 0) {
+		var child = scene.children[scene.children.length - 1];
+		scene.remove(child);
+		//renderer.deallocateObject(child);
+	}
+
+	var rooms = new Array();
+	for (var c = 0; c < 8; c++) {
+		rooms[c] = new Room(colors[c]);
+	}
+
+	rooms[0].paths[NORTH] = new Path(rooms[0], SOUTH);
+	rooms[0].paths[EAST] = new Path(rooms[3], SOUTH);
+	rooms[0].paths[SOUTH] = new Path(rooms[3], NORTH);
+
+	rooms[1].paths[NORTH] = new Path(rooms[2], NORTH);
+	rooms[1].paths[SOUTH] = new Path(rooms[0], NORTH);
+
+	rooms[2].paths[NORTH] = new Path(rooms[4], NORTH);
+	rooms[2].paths[EAST] = new Path(rooms[0], NORTH);
+	rooms[2].paths[SOUTH] = new Path(rooms[4], NORTH);
+
+	rooms[3].paths[NORTH] = new Path(rooms[0], NORTH);
+	rooms[3].paths[EAST] = new Path(rooms[1], NORTH);
+	rooms[3].paths[SOUTH] = new Path(rooms[0], NORTH);
+	rooms[3].paths[WEST] = new Path(rooms[0], WEST);
+
+	rooms[4].paths[NORTH] = new Path(rooms[7], NORTH);
+	rooms[4].paths[WEST] = new Path(rooms[5], EAST);
+
+	rooms[5].paths[NORTH] = new Path(rooms[0], NORTH);
+	rooms[5].paths[EAST] = new Path(rooms[0], WEST);
+	rooms[5].paths[SOUTH] = new Path(rooms[0], SOUTH);
+	rooms[5].paths[WEST] = new Path(rooms[0], EAST);
+
+	rooms[6].paths[NORTH] = new Path(rooms[5], NORTH);
+
+	rooms[7].paths[NORTH] = new Path(rooms[6], NORTH);	
+
+	assignObjects(rooms);
+
+	for(i = 0; i < rooms.length; i ++) {
+		rooms[i].buildGeometry();
+	}
+
+	return rooms;
+}
+
+function gen_7() {
+	while(scene.children.length > 0) {
+		var child = scene.children[scene.children.length - 1];
+		scene.remove(child);
+		//renderer.deallocateObject(child);
+	}
+
+	var rooms = new Array();
+	for (var c = 0; c < 4; c++) {
+		rooms[c] = new Room(colors[c]);
+	}
+
+	rooms[0].paths[NORTH] = new Path(rooms[3], SOUTH);
+	rooms[0].paths[EAST] = new Path(rooms[3], SOUTH);
+	rooms[0].paths[SOUTH] = new Path(rooms[1], EAST);
+	rooms[0].paths[WEST] = new Path(rooms[3], SOUTH);
+
+	rooms[1].paths[NORTH] = new Path(rooms[0], SOUTH);
+	rooms[1].paths[EAST] = new Path(rooms[2], NORTH);
+	rooms[1].paths[SOUTH] = new Path(rooms[0], SOUTH);
+	rooms[1].paths[SOUTH] = new Path(rooms[3], SOUTH);
+
+	rooms[2].paths[NORTH] = new Path(rooms[0], NORTH);
+	rooms[2].paths[EAST] = new Path(rooms[0], WEST);
+	rooms[2].paths[SOUTH] = new Path(rooms[3], WEST);
+	rooms[2].paths[WEST] = new Path(rooms[0], EAST);
+
+	rooms[3].paths[NORTH] = new Path(rooms[1], EAST);
+	rooms[3].paths[EAST] = new Path(rooms[3], NORTH);
+	rooms[3].paths[SOUTH] = new Path(rooms[1], EAST);
+	rooms[3].paths[WEST] = new Path(rooms[1], EAST);
+
+
+	assignObjects(rooms);
+
+	for(i = 0; i < rooms.length; i ++) {
+		rooms[i].buildGeometry();
+	}
+
+	return rooms;
+}
+
 function gen_menu() {
 
 	//nuke
