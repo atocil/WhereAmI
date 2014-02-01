@@ -5,6 +5,7 @@
 	</head>
 	<body>
 		<script src="https://rawgithub.com/mrdoob/three.js/master/build/three.js"></script>
+		<script src="gamepad.js"></script>
 		<script src="colors.js"></script>
 		<script src="room.js"></script>
 		<script src="path.js"></script>
@@ -109,6 +110,32 @@
 				// if(spaceIsPressed == true) {
 				// 	camera.position.y += dVert;
 				// }
+
+				if(Gamepad.supported) {
+
+					var pad = Gamepad.getStates();
+					pad = pad[0];
+					
+					if(pad) {
+						if(Math.abs(pad.leftStickX) > 0.2) {
+							camera.position.x += Math.cos(camera.rotation.y) * (pad.leftStickX / 4);
+                			camera.position.z -= Math.sin(camera.rotation.y) * (pad.leftStickX / 4);
+						}
+					
+						if(Math.abs(pad.leftStickY) > 0.2) {
+							camera.position.x += Math.cos( (Math.PI / 2) + camera.rotation.y) * (pad.leftStickY / -4);
+	                		camera.position.z -= Math.sin( (Math.PI / 2) + camera.rotation.y) * (pad.leftStickY / -4);
+						}
+
+						if(Math.abs(pad.rightStickX) > 0.2) {
+							camera.rotation.y -= 0.05 * pad.rightStickX;
+						}
+
+						if(Math.abs(pad.rightStickY) > 0.2) {
+							camera.rotation.x -= 0.05 * pad.rightStickY;
+						}
+					}
+				}
 
 				if(camera.position.x > ROOM_OFFSET - ROOM_TOLERANCE) {
 					if(camera.position.z > -DOOR_OFFSET + ROOM_TOLERANCE 
