@@ -165,6 +165,75 @@ function gen_3()
 	return rooms;
 }
 
+function gen_4() {
+	var rooms = new Array();
+	for (var c = 0; c < 5; c++) {
+		rooms[c] = new Room(colors[c]);
+	}
+
+	rooms[0].paths[NORTH] = new Path(rooms[0], SOUTH);
+	rooms[0].paths[SOUTH] = new Path(rooms[0], NORTH);
+	rooms[0].paths[EAST] = new Path(rooms[0], EAST);
+	rooms[0].paths[WEST] = new Path(rooms[1], WEST);
+
+	rooms[1].paths[SOUTH] = new Path(rooms[0], WEST);
+	rooms[1].paths[WEST] = new Path(rooms[2], NORTH);
+
+	rooms[2].paths[NORTH] = new Path(rooms[3], SOUTH);
+	rooms[2].paths[SOUTH] = new Path(rooms[0], WEST);
+	rooms[2].paths[EAST] = new Path(rooms[0], NORTH);
+
+	rooms[3].paths[SOUTH] = new Path(rooms[0], WEST);
+	rooms[3].paths[WEST] = new Path(rooms[4], NORTH);
+
+	rooms[4].paths[NORTH] = new Path(rooms[0], NORTH);
+	rooms[4].paths[SOUTH] = new Path(rooms[1], SOUTH);
+
+	for(i = 0; i < rooms.length; i ++) {
+		rooms[i].buildGeometry();
+	}
+
+	return rooms;
+}
+
+function gen_5() {
+	var rooms = new Array();
+	for (var c = 0; c < 8; c++) {
+		rooms[c] = new Room(colors[c]);
+	}
+
+	rooms[0].paths[NORTH] = new Path(rooms[1], NORTH);
+	rooms[0].paths[EAST] = new Path(rooms[4], NORTH);
+
+	rooms[1].paths[NORTH] = new Path(rooms[0], NORTH);
+	rooms[1].paths[EAST] = new Path(rooms[2], WEST);
+	rooms[1].paths[SOUTH] = new Path(rooms[4], SOUTH);
+
+	rooms[2].paths[NORTH] = new Path(rooms[5], NORTH);
+	rooms[2].paths[WEST] = new Path(rooms[1], EAST);
+	rooms[2].paths[EAST] = new Path(rooms[0], EAST);
+
+	rooms[3].paths[EAST] = new Path(rooms[6], NORTH);
+
+	rooms[4].paths[NORTH] = new Path(rooms[1], SOUTH);
+	rooms[4].paths[SOUTH] = new Path(rooms[7], EAST);
+
+	rooms[5].paths[NORTH] = new Path(rooms[4], SOUTH);
+	rooms[5].paths[SOUTH] = new Path(rooms[3], EAST);
+
+	rooms[6].paths[NORTH] = new Path(rooms[1], EAST);
+	rooms[6].paths[SOUTH] = new Path(rooms[4], SOUTH);
+
+	rooms[7].paths[NORTH] = new Path(rooms[4], NORTH);
+	rooms[7].paths[EAST] = new Path(rooms[3], EAST);
+
+	for(i = 0; i < rooms.length; i ++) {
+		rooms[i].buildGeometry();
+	}
+
+	return rooms;
+}
+
 function gen_menu() {
 
 	//nuke
