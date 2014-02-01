@@ -1,18 +1,24 @@
+<!DOCTYPE HTML><meta charset="UTF-8">
 <html>
 	<head>
 		<title>Where Am I?</title>
 		<style>canvas { width: 100%; height: 100% }</style>
 	</head>
 	<body>
+		<h1 id="score" style="color:white;position:fixed;top:5px;left:13px;">Loading...</h1>
 		<script src="https://rawgithub.com/mrdoob/three.js/master/build/three.js"></script>
 		<script src="gamepad.js"></script>
+		<script src="optimer_bold.typeface.js"></script>
 		<script src="colors.js"></script>
 		<script src="room.js"></script>
 		<script src="path.js"></script>
 		<script src="worldgen.js"></script>
 		<script src="control.js"></script>
-		<script src="optimer_bold.typeface.js"></script>
 		<script>
+
+
+			var score = document.getElementById("score");
+
 			//Start with 3 parts, scene, camera and renderer
 			var scene = new THREE.Scene();
 
@@ -39,7 +45,6 @@
 			var theRoom;
 
 			var angle;
-			var lastA = false;
 
 			camera.position.x = 0;
 			camera.position.y = 2.6;
@@ -75,12 +80,13 @@
 				}
 				else if(theRoom.object == null) {
 					holding = theRoom.placeBlock(scene, holding);
-					isGameSolved();
 				}
 				else {
 					holding = theRoom.placeBlock(scene, holding);
 					holding.scale = new THREE.Vector3(.7, .7, .7);
 				}
+				isGameSolved();
+
 			}
 
 			
@@ -113,39 +119,6 @@
 				// 	camera.position.y += dVert;
 				// }
 
-				if(Gamepad.supported) {
-
-					var pad = Gamepad.getStates();
-					pad = pad[0];
-
-					if(pad) {
-						if(Math.abs(pad.leftStickX) > 0.2) {
-							camera.position.x += Math.cos(camera.rotation.y) * (pad.leftStickX / 4);
-                			camera.position.z -= Math.sin(camera.rotation.y) * (pad.leftStickX / 4);
-						}
-					
-						if(Math.abs(pad.leftStickY) > 0.2) {
-							camera.position.x += Math.cos( (Math.PI / 2) + camera.rotation.y) * (pad.leftStickY / -4);
-	                		camera.position.z -= Math.sin( (Math.PI / 2) + camera.rotation.y) * (pad.leftStickY / -4);
-						}
-
-						if(Math.abs(pad.rightStickX) > 0.2) {
-							camera.rotation.y -= 0.05 * pad.rightStickX;
-						}
-
-						if(Math.abs(pad.rightStickY) > 0.2) {
-							camera.rotation.x -= 0.05 * pad.rightStickY;
-						}
-
-						if(pad.faceButton0) {
-							if(!lastA) {
-								attemptGrab();
-							}
-						}
-						lastA = pad.faceButton0;
-					}
-				}
-
 				var oldAngle = angle;
 				if(camera.position.x > ROOM_OFFSET - ROOM_TOLERANCE) {
 					if(camera.position.z > -DOOR_OFFSET + ROOM_TOLERANCE 
@@ -153,7 +126,7 @@
 						&& rebuild(3) ) {
 							if((menu)) {
 								menu = false;
-								runGen(gen_5);
+								runGen(gen_3);
 							} else {
 								camera.position.x = -ROOM_OFFSET + ROOM_TOLERANCE;
 							}
@@ -191,7 +164,7 @@
 						&& rebuild(0) ) {
 							if((menu)  && oldAngle == 2) {
 								menu = false;
-								runGen(gen_4);
+								runGen(gen_2);
 							} else {
 								camera.position.z = ROOM_OFFSET - ROOM_TOLERANCE;
 							}
@@ -224,7 +197,7 @@
 				//console.log("x: " + camera.position.x + "   z: " + camera.position.z);
 				renderer.render(scene, camera);
 			}
-			
+			score.innerHTML = "";
 			render();
 
 			function rebuild(side) {
@@ -260,13 +233,20 @@
 			}
 
 			function isGameSolved() {
+				var count = 0;
 				for (var c = 0; c < rooms.length; c++) {
-					if (rooms[c].object == null || rooms[c].object.material != rooms[c].materials[0])
-						return false;
+					if (rooms[c].object != null && rooms[c].object.material == rooms[c].materials[0])
+						count++;
 				}
-				alert("YOU WON!!!!");
-				menu = true;
-				runGen(gen_menu);
+				if (count >= rooms.length) {
+					score.innerHTML = "";
+					alert("YOU WON!!!!");
+					menu = true;
+					runGen(gen_menu);
+					return true;
+				}
+				score.innerHTML = ""+count+" / "+rooms.length;
+				return false;
 			}
 
 			function runGen(generate) {
@@ -280,6 +260,8 @@
 				camera.position.x = 0;
 				camera.position.y = 2.6;
 				camera.position.z = 0;
+				camera.rotation.y = 0;
+				camera.rotation.x = 0;
 
 				radius = 10;
 
