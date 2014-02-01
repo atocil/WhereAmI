@@ -6,35 +6,31 @@
 	<body>
 		<script src="https://rawgithub.com/mrdoob/three.js/master/build/three.js"></script>
 		<script src="colors.js"></script>
+		<script src="room.js"></script>
+		<script src="worldgen.js"></script>
 		<script>
 			//Start with 3 parts, scene, camera and renderer
 			var scene = new THREE.Scene();
 			//<FOV>, <ASPECTRATIO>, <NEARCLIP>, <FARCLIP>
-			var camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 3000 );
+
+			var camera = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 0.1, 20 );
 			camera.rotation = new THREE.Euler( 0, 0, 0, 'YXZ' );
 
 			var renderer = new THREE.WebGLRenderer();
 			renderer.setSize( window.innerWidth, window.innerHeight );
 			document.body.appendChild( renderer.domElement );
 
-			//Add Geometry
-			var halfSize = 3;
-			var cube;
-			for(var i = -halfSize; i < halfSize; i++) {
-				for(var j = -halfSize; j < halfSize; j++) {
-					for(var k = -halfSize; k < halfSize; k++) {
-						var scale = (i + j + k + 15) / 40;
-						var geometry = new THREE.CubeGeometry(scale, scale, scale);
-						var material = new THREE.MeshBasicMaterial( { color: Math.random() * 0x440000 });
-						cube = new THREE.Mesh( geometry, material );
-						cube.position.set( i, j, k );
-						scene.add( cube );
-					}
-				}
-			}
+			var theRoom = new Room(0xFF0000);
+			theRoom.paths[NORTH] = new Array();
+			theRoom.paths[WEST] = new Array();
+			theRoom.paths[SOUTH] = new Array();
+			theRoom.paths[EAST] = new Array();
+
+			theRoom.buildGeometry();
+			theRoom.buildFirsthand(scene);
 
 			camera.position.x = 0;
-			camera.position.y = 0;
+			camera.position.y = 5;
 			camera.position.z = 0;
 
 			var radius = 10;

@@ -19,24 +19,24 @@ function Room(pcolor) {
 
 Room.prototype.buildGeometry = function() {
 	this.geometry = new THREE.Geometry();
-	this.geometry.vertices.push(new THREE.Vector3( ROOM_OFFSET, 0, -ROOM_OFFSET));
-	this.geometry.vertices.push(new THREE.Vector3( ROOM_OFFSET, 0,  ROOM_OFFSET));
 	this.geometry.vertices.push(new THREE.Vector3(-ROOM_OFFSET, 0,  ROOM_OFFSET));
 	this.geometry.vertices.push(new THREE.Vector3(-ROOM_OFFSET, 0, -ROOM_OFFSET));
-	this.geometry.vertices.push(new THREE.Vector3( ROOM_OFFSET, ROOM_HEIGHT, -ROOM_OFFSET));
-	this.geometry.vertices.push(new THREE.Vector3( ROOM_OFFSET, ROOM_HEIGHT,  ROOM_OFFSET));
+	this.geometry.vertices.push(new THREE.Vector3( ROOM_OFFSET, 0, -ROOM_OFFSET));
+	this.geometry.vertices.push(new THREE.Vector3( ROOM_OFFSET, 0,  ROOM_OFFSET));
 	this.geometry.vertices.push(new THREE.Vector3(-ROOM_OFFSET, ROOM_HEIGHT,  ROOM_OFFSET));
 	this.geometry.vertices.push(new THREE.Vector3(-ROOM_OFFSET, ROOM_HEIGHT, -ROOM_OFFSET));
+	this.geometry.vertices.push(new THREE.Vector3( ROOM_OFFSET, ROOM_HEIGHT, -ROOM_OFFSET));
+	this.geometry.vertices.push(new THREE.Vector3( ROOM_OFFSET, ROOM_HEIGHT,  ROOM_OFFSET));
 	var count = 8;
 
-	this.geometry.faces.push(new THREE.Face3(0,1,2));
-	this.geometry.faces.push(new THREE.Face3(2,3,0));
+	this.geometry.faces.push(new THREE.Face3(1,0,2));
+	this.geometry.faces.push(new THREE.Face3(3,2,0));
 	this.geometry.faces.push(new THREE.Face3(4,5,6));
 	this.geometry.faces.push(new THREE.Face3(6,7,4));
 
 	if (this.paths[NORTH] == null) {
-		this.geometry.faces.push(new THREE.Face3(1,5,6));
-		this.geometry.faces.push(new THREE.Face3(6,2,1));
+		this.geometry.faces.push(new THREE.Face3(5,1,6));
+		this.geometry.faces.push(new THREE.Face3(2,6,1));
 	} else {
 		this.geometry.vertices.push(new THREE.Vector3(-DOOR_OFFSET, 0, -ROOM_OFFSET));
 		this.geometry.vertices.push(new THREE.Vector3(-DOOR_OFFSET, DOOR_HEIGHT, -ROOM_OFFSET));
@@ -44,58 +44,58 @@ Room.prototype.buildGeometry = function() {
 		this.geometry.vertices.push(new THREE.Vector3( DOOR_OFFSET, ROOM_HEIGHT, -ROOM_OFFSET));
 		this.geometry.vertices.push(new THREE.Vector3( DOOR_OFFSET, DOOR_HEIGHT, -ROOM_OFFSET));
 		this.geometry.vertices.push(new THREE.Vector3( DOOR_OFFSET, 0, -ROOM_OFFSET));
-		this.geometry.faces.push(new THREE.Face3(1,5,count+2));
-		this.geometry.faces.push(new THREE.Face3(count+2, count, 1));
-		this.geometry.faces.push(new THREE.Face3(count+1, count+2, count+3));
-		this.geometry.faces.push(new THREE.Face3(count+3, count+4, count+1));
-		this.geometry.faces.push(new THREE.Face3(count+5, count+3, 6));
-		this.geometry.faces.push(new THREE.Face3(6, 2, count+5));
+		this.geometry.faces.push(new THREE.Face3(5,1,count+2));
+		this.geometry.faces.push(new THREE.Face3(count, count+2, 1));
+		this.geometry.faces.push(new THREE.Face3(count+2, count+1, count+3));
+		this.geometry.faces.push(new THREE.Face3(count+4, count+3, count+1));
+		this.geometry.faces.push(new THREE.Face3(count+3, count+5, 6));
+		this.geometry.faces.push(new THREE.Face3(2, 6, count+5));
 		count += 6;
 
 	}
 
 	if (this.paths[WEST] == null) {
-		this.geometry.faces.push(new THREE.Face3(0,4,5));
-		this.geometry.faces.push(new THREE.Face3(5,1,0));
+		this.geometry.faces.push(new THREE.Face3(4,0,5));
+		this.geometry.faces.push(new THREE.Face3(1,5,0));
 	} else {
-		this.geometry.vertices.push(new THREE.Vector3(-ROOM_OFFSET, 0, -DOOR_OFFSET));
-		this.geometry.vertices.push(new THREE.Vector3(-ROOM_OFFSET, DOOR_HEIGHT, -DOOR_OFFSET));
-		this.geometry.vertices.push(new THREE.Vector3(-ROOM_OFFSET, ROOM_HEIGHT, -DOOR_OFFSET));
-		this.geometry.vertices.push(new THREE.Vector3(-ROOM_OFFSET, ROOM_HEIGHT,  DOOR_OFFSET));
-		this.geometry.vertices.push(new THREE.Vector3(-ROOM_OFFSET, DOOR_HEIGHT,  DOOR_OFFSET));
 		this.geometry.vertices.push(new THREE.Vector3(-ROOM_OFFSET, 0,  DOOR_OFFSET));
-		this.geometry.faces.push(new THREE.Face3(0,4,count+2));
-		this.geometry.faces.push(new THREE.Face3(count+2, count, 0));
-		this.geometry.faces.push(new THREE.Face3(count+1, count+2, count+3));
-		this.geometry.faces.push(new THREE.Face3(count+3, count+4, count+1));
-		this.geometry.faces.push(new THREE.Face3(count+5, count+3, 5));
-		this.geometry.faces.push(new THREE.Face3(5, 1, count+5));
+		this.geometry.vertices.push(new THREE.Vector3(-ROOM_OFFSET, DOOR_HEIGHT,  DOOR_OFFSET));
+		this.geometry.vertices.push(new THREE.Vector3(-ROOM_OFFSET, ROOM_HEIGHT,  DOOR_OFFSET));
+		this.geometry.vertices.push(new THREE.Vector3(-ROOM_OFFSET, ROOM_HEIGHT, -DOOR_OFFSET));
+		this.geometry.vertices.push(new THREE.Vector3(-ROOM_OFFSET, DOOR_HEIGHT, -DOOR_OFFSET));
+		this.geometry.vertices.push(new THREE.Vector3(-ROOM_OFFSET, 0, -DOOR_OFFSET));
+		this.geometry.faces.push(new THREE.Face3(4,0,count+2));
+		this.geometry.faces.push(new THREE.Face3(count, count+2, 0));
+		this.geometry.faces.push(new THREE.Face3(count+2, count+1, count+3));
+		this.geometry.faces.push(new THREE.Face3(count+4, count+3, count+1));
+		this.geometry.faces.push(new THREE.Face3(count+3, count+5, 5));
+		this.geometry.faces.push(new THREE.Face3(1, 5, count+5));
 		count += 6;
 
 	}
 
 	if (this.paths[SOUTH] == null) {
-		this.geometry.faces.push(new THREE.Face3(3,7,4));
-		this.geometry.faces.push(new THREE.Face3(4,0,3));
+		this.geometry.faces.push(new THREE.Face3(7,3,4));
+		this.geometry.faces.push(new THREE.Face3(0,4,3));
 	} else {
-		this.geometry.vertices.push(new THREE.Vector3(-DOOR_OFFSET, 0,  ROOM_OFFSET));
-		this.geometry.vertices.push(new THREE.Vector3(-DOOR_OFFSET, DOOR_HEIGHT,  ROOM_OFFSET));
-		this.geometry.vertices.push(new THREE.Vector3(-DOOR_OFFSET, ROOM_HEIGHT,  ROOM_OFFSET));
-		this.geometry.vertices.push(new THREE.Vector3( DOOR_OFFSET, ROOM_HEIGHT,  ROOM_OFFSET));
-		this.geometry.vertices.push(new THREE.Vector3( DOOR_OFFSET, DOOR_HEIGHT,  ROOM_OFFSET));
 		this.geometry.vertices.push(new THREE.Vector3( DOOR_OFFSET, 0,  ROOM_OFFSET));
-		this.geometry.faces.push(new THREE.Face3(3,7,count+2));
-		this.geometry.faces.push(new THREE.Face3(count+2, count, 3));
-		this.geometry.faces.push(new THREE.Face3(count+1, count+2, count+3));
-		this.geometry.faces.push(new THREE.Face3(count+3, count+4, count+1));
-		this.geometry.faces.push(new THREE.Face3(count+5, count+3, 4));
-		this.geometry.faces.push(new THREE.Face3(4, 0, count+5));
+		this.geometry.vertices.push(new THREE.Vector3( DOOR_OFFSET, DOOR_HEIGHT,  ROOM_OFFSET));
+		this.geometry.vertices.push(new THREE.Vector3( DOOR_OFFSET, ROOM_HEIGHT,  ROOM_OFFSET));
+		this.geometry.vertices.push(new THREE.Vector3(-DOOR_OFFSET, ROOM_HEIGHT,  ROOM_OFFSET));
+		this.geometry.vertices.push(new THREE.Vector3(-DOOR_OFFSET, DOOR_HEIGHT,  ROOM_OFFSET));
+		this.geometry.vertices.push(new THREE.Vector3(-DOOR_OFFSET, 0,  ROOM_OFFSET));
+		this.geometry.faces.push(new THREE.Face3(7,3,count+2));
+		this.geometry.faces.push(new THREE.Face3(count, count+2, 3));
+		this.geometry.faces.push(new THREE.Face3(count+2, count+1, count+3));
+		this.geometry.faces.push(new THREE.Face3(count+4, count+3, count+1));
+		this.geometry.faces.push(new THREE.Face3(count+3, count+5, 4));
+		this.geometry.faces.push(new THREE.Face3(0, 4, count+5));
 		count += 6;
 	}
 
 	if (this.paths[EAST] == null) {
-		this.geometry.faces.push(new THREE.Face3(2,6,7));
-		this.geometry.faces.push(new THREE.Face3(7,3,2));
+		this.geometry.faces.push(new THREE.Face3(6,2,7));
+		this.geometry.faces.push(new THREE.Face3(3,7,2));
 	} else {
 		this.geometry.vertices.push(new THREE.Vector3( ROOM_OFFSET, 0, -DOOR_OFFSET));
 		this.geometry.vertices.push(new THREE.Vector3( ROOM_OFFSET, DOOR_HEIGHT, -DOOR_OFFSET));
@@ -103,12 +103,12 @@ Room.prototype.buildGeometry = function() {
 		this.geometry.vertices.push(new THREE.Vector3( ROOM_OFFSET, ROOM_HEIGHT,  DOOR_OFFSET));
 		this.geometry.vertices.push(new THREE.Vector3( ROOM_OFFSET, DOOR_HEIGHT,  DOOR_OFFSET));
 		this.geometry.vertices.push(new THREE.Vector3( ROOM_OFFSET, 0,  DOOR_OFFSET));
-		this.geometry.faces.push(new THREE.Face3(2,6,count+2));
-		this.geometry.faces.push(new THREE.Face3(count+2, count, 2));
-		this.geometry.faces.push(new THREE.Face3(count+1, count+2, count+3));
-		this.geometry.faces.push(new THREE.Face3(count+3, count+4, count+1));
-		this.geometry.faces.push(new THREE.Face3(count+5, count+3, 7));
-		this.geometry.faces.push(new THREE.Face3(7, 3, count+5));
+		this.geometry.faces.push(new THREE.Face3(6,2,count+2));
+		this.geometry.faces.push(new THREE.Face3(count, count+2, 2));
+		this.geometry.faces.push(new THREE.Face3(count+2, count+1, count+3));
+		this.geometry.faces.push(new THREE.Face3(count+4, count+3, count+1));
+		this.geometry.faces.push(new THREE.Face3(count+3, count+5, 7));
+		this.geometry.faces.push(new THREE.Face3(3, 7, count+5));
 		count += 6;
 	}
 }
