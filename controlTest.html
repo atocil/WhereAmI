@@ -7,7 +7,7 @@
 	<body>
 		<h1 id="score" style="color:white;position:fixed;top:5px;left:13px;">Loading...</h1>
 		<script src="https://rawgithub.com/mrdoob/three.js/master/build/three.js"></script>
-		<script src="gamepad.js"></script>
+		<!--<script src="gamepad.js"></script> -->
 		<script src="optimer_bold.typeface.js"></script>
 		<script src="colors.js"></script>
 		<script src="room.js"></script>
@@ -43,6 +43,35 @@
 			
 			var rooms;
 			var theRoom;
+
+			var particleCount = 120;
+			var particles = new THREE.Geometry();
+
+			// now create the individual particles
+			for (var p = 0; p < particleCount; p++) {
+
+			  // create a particle with random
+			  // position values, -250 -> 250
+			  var pX = Math.random() * 1 - .5;
+			  var pY = Math.random() * 1 - .5;
+			  var pZ = Math.random() * 1 - .5;
+			  var particle = new THREE.Vertex(
+			        new THREE.Vector3(pX, pY, pZ)
+			      );
+
+			  // add it to the geometry
+			  particles.vertices.push(particle);
+			}
+
+			var pMaterial = new THREE.ParticleBasicMaterial({
+			  color: 0xFFFFFF,
+			  size: 20,
+			  map: THREE.ImageUtils.loadTexture(
+			    "particle.png"
+			  ),
+			  blending: THREE.AdditiveBlending,
+			  transparent: true
+			});
 
 			var angle;
 
@@ -234,9 +263,17 @@
 
 			function isGameSolved() {
 				var count = 0;
+				var particleSystem;
 				for (var c = 0; c < rooms.length; c++) {
-					if (rooms[c].object != null && rooms[c].object.material == rooms[c].materials[0])
+					if (rooms[c].object != null && rooms[c].object.material == rooms[c].materials[0]) {
+						particleSystem = new THREE.ParticleSystem( particles, pMaterial );
+						particleSystem.position.x = rooms[c].object.position.x;
+						particleSystem.position.z = rooms[c].object.position.z;
+						particleSystem.position.y = .5;
+						scene.add(particleSystem);
+
 						count++;
+					}
 				}
 				if (count >= rooms.length) {
 					score.innerHTML = "";
