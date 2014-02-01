@@ -21,7 +21,7 @@ DOOR_GEOM.faces.push(new THREE.Face3(2,3,0));
 
 function Room(pcolor) {
 	this.paths = new Array(null, null, null, null);
-	this.materials = [new THREE.MeshLambertMaterial({color: pcolor}), new THREE.MeshBasicMaterial({color:0x000000, wireframe:true})];
+	this.materials = [new THREE.MeshBasicMaterial({color: pcolor}), new THREE.MeshBasicMaterial({color:0x000000, wireframe:true})];
 	this.visited = false;
 	this.geometry = null;
 }
