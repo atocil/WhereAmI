@@ -57,25 +57,31 @@
 			var lShiftIsPressed = false;
 			var spaceIsPressed = false;
 
-			function attemptGrab()
-			{
+			var HOLDING_Z_OFFSET = 1;
+
+			function attemptGrab() {
 				if(holding == null) {
 					holding = theRoom.object;
 					theRoom.object = null;
-					scene.remove(holding);
+					//scene.remove(holding);
+					holding.scale = new THREE.Vector3(.7, .7, .7);
 				}
 				else if(theRoom.object == null) {
+					holding.scale = new THREE.Vector3(1, 1, 1);
+					holding.position.set(0, 0, 0);
+					holding.rotation.y = 0;
 					theRoom.object = holding;
 					holding = null;
-					scene.add(theRoom.object);
 					isGameSolved();
 				}
 				else {
+					holding.scale = new THREE.Vector3(1, 1, 1);
+					holding.position.set(0, 0, 0);
+					holding.rotation.y = 0;
 					var temp = holding;
 					holding = theRoom.object;
+					holding.scale = new THREE.Vector3(.7, .7, .7);
 					theRoom.object = temp;
-					scene.remove(holding);
-					scene.add(theRoom.object);
 				}
 			}
 
@@ -174,6 +180,10 @@
 				if(wIsPressed == true) {
 					camera.position.x += Math.cos( (Math.PI / 2) + camera.rotation.y) / 5;
 	                camera.position.z -= Math.sin( (Math.PI / 2) + camera.rotation.y) / 5;
+	               	if(holding != null) {
+	               		holding.position.x += Math.cos( (Math.PI / 2) + camera.rotation.y) / 5;
+	               		holding.position.z -= Math.sin( (Math.PI / 2) + camera.rotation.y) / 5;
+	               	}
 				}
 				if(sIsPressed == true) {
                 	camera.position.x += Math.cos( (-Math.PI / 2) + camera.rotation.y) / 5;
@@ -236,7 +246,12 @@
 					camera.rotation.x -= (mouseY - mouseYOld) / 600;
 				}
 				
-
+				if(holding != null) {
+					holding.position.y = 1.5;
+					holding.position.x = camera.position.x - Math.sin(camera.rotation.y);
+					holding.position.z = camera.position.z - Math.cos(camera.rotation.y);
+					holding.rotation.y = camera.rotation.y;
+				}
 
 				mouseXOld = mouseX;
 				mouseYOld = mouseY; 
@@ -265,6 +280,8 @@
 					scene.remove(child);
 					//renderer.deallocateObject(child);
 				}
+				if(holding != null)
+					scene.add(holding);
 
 				console.log("old angle: " + angle);
 
