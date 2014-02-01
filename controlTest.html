@@ -36,13 +36,13 @@
 			camera.position.z = 0;
 
 			var radius = 10;
-			var theta = 0;
-			var dTheta = .03;
 
 			var wIsPressed = false;
 			var sIsPressed = false; 
 			var aIsPressed = false;
 			var dIsPressed = false;
+			var lShiftIsPressed = false;
+			var spaceIsPressed = false;
 			document.onkeydown = function(down) {
 
 				switch (down.keyCode) {
@@ -60,6 +60,14 @@
 
 	                case 68: // D
 	     				dIsPressed = true;
+	                break;
+
+	                case 32: // Space
+	                	spaceIsPressed = true;
+	                break;
+
+	                case 16: // lShift
+	                	lShiftIsPressed = true;
 	                break;
 
 	                case 66:
@@ -87,12 +95,23 @@
 	     				dIsPressed = false;
 	                break;
 
+	                case 32: // Space
+	                	spaceIsPressed = false;
+	                break;
+	                
+	                case 16: // lShift
+	                	lShiftIsPressed = false;
+	                break;	                
+
 	                case 66:
 	                	alert(camera.rotation.y);
 	                break;
 				}
 			}
 
+			var dVert = .1;
+			var theta = 0;
+			var dTheta = .03;
 			function updateCamera() {
 				if(wIsPressed == true) {
 					camera.position.x += Math.cos( (Math.PI / 2) + camera.rotation.y) / 5;
@@ -107,6 +126,12 @@
 				}
 				if(dIsPressed == true) {
 	                camera.rotation.y -= dTheta;
+				}
+				if(lShiftIsPressed == true) {
+					camera.position.y -= dVert;
+				}
+				if(spaceIsPressed == true) {
+					camera.position.y += dVert;
 				}
 			}
 
