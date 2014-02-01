@@ -278,6 +278,14 @@
 				return true;
 			}
 
+			function isGameSolved() {
+				for (int c = 0; c < rooms.length; c++) {
+					if (rooms[c].object.material != rooms[c].materials[0])
+						return false;
+				}
+				return true;
+			}
+
 			
 			render();
 		</script>
