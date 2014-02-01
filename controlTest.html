@@ -38,9 +38,6 @@
 			var radius = 10;
 			var theta = 0;
 			var dTheta = .03;
-			var t = 0;
-			var dt = .01;
-
 
 			var wIsPressed = false;
 			var sIsPressed = false; 
@@ -114,7 +111,6 @@
 			}
 
 			function render() {
-				t += dt;
 				requestAnimationFrame(render);
 
 				updateCamera();
