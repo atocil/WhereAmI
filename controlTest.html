@@ -71,6 +71,7 @@
 					holding = null;
 					holdingSomething = false;
 					scene.add(theRoom.object);
+					isGameSolved();
 				}
 				else {
 					var temp = holding;
@@ -295,10 +296,11 @@
 			}
 
 			function isGameSolved() {
-				for (int c = 0; c < rooms.length; c++) {
+				for (var c = 0; c < rooms.length; c++) {
 					if (rooms[c].object.material != rooms[c].materials[0])
 						return false;
 				}
+				alert("YOU WON!!!!");
 				return true;
 			}
 

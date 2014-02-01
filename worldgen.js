@@ -45,7 +45,7 @@ function generate_world(num_rooms, num_doors)
 				doors2.push(c)
 		}
 		if (doors2.length == 0)
-			alert("WTF DOORS?!")
+			alert("WTF DOORS?!");
 		door_num = Math.floor(Math.random() * doors2.length);
 
 		temp_room.paths[door_num] = new Path(rooms[Math.floor(Math.random() * num_rooms)], Math.floor(Math.random() * num_doors));
