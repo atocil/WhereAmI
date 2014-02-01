@@ -6,13 +6,12 @@ EAST  = 3;
 ROOM_HEIGHT = 10;
 ROOM_WIDTH = 10;
 ROOM_OFFSET = ROOM_WIDTH/2;
-ROOM_TOLERANCE = .2;	//How close to the wall you can get
+ROOM_TOLERANCE = .3;	//How close to the wall you can get
 
 DOOR_WIDTH = 2;
 DOOR_HEIGHT = 2*DOOR_WIDTH;
 DOOR_OFFSET = DOOR_WIDTH/2;
 
-FRAME_OFFSET = .3;
 FRAME_DEPTH = .15;
 
 
@@ -70,48 +69,11 @@ FRAME_GEOM.faces.push(new THREE.Face3(10,8,13));
 
 
 function Room(pcolor) {
+	this.myColor = pcolor;
 	this.paths = new Array(null, null, null, null);
 	// this.materials = [new THREE.MeshBasicMaterial( {color: pcolor, transparent: true, blending: THREE.MultiplyBlending}), new THREE.MeshDepthMaterial()];
 	//new THREE.MeshBasicMaterial({wireframe: true, color: 0xFF0000}),
-	this.materials = [
-	new THREE.ShaderMaterial(	
-	{
-		uniforms: {
-			"mNear": { type: "f", value: 1.0 },
-			"mFar" : { type: "f", value: 35.0 },
-			"color": { type: "v3", value: new THREE.Vector3( ((pcolor & 0xFF0000) >> 16) / 255, ((pcolor & 0x00FF00) >> 8) / 255, (pcolor & 0x0000FF) / 255 ) },
-			"opacity" : { type: "f", value: 1.0 }
-
-		},
-
-		vertexShader: [
-
-			"void main() {",
-
-				"gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );",
-
-			"}"
-
-		].join("\n"),
-
-		fragmentShader: [
-
-			"uniform float mNear;",
-			"uniform float mFar;",
-			"uniform vec3 color;",
-			"uniform float opacity;",
-
-			"void main() {",
-
-				"float depth = gl_FragCoord.z / gl_FragCoord.w;",
-				"float f = 1.0 - smoothstep( mNear, mFar, depth );",
-				"gl_FragColor = vec4( vec3(f) * color, opacity );",
-
-			"}"
-
-		].join("\n")
-
-	})];
+	this.materials = [getNewMaterial(pcolor)];
 	this.visited = false;
 	this.geometry = null;
 	this.object = null;
@@ -240,7 +202,7 @@ Room.prototype.buildFirsthand = function(scene, angle) {
 	for (var c = 0; c < 4; c++) {
 		var path = this.paths[c];
 		if (path != null) {
-			mesh = new THREE.Mesh(FRAME_GEOM, path.to_room.materials[0]);
+			mesh = new THREE.Mesh(FRAME_GEOM, getDarkVariant(path.to_room.myColor));
 			mesh.rotation.y = (angle + c) * Math.PI / 2;
 			scene.add(mesh);
 			path.to_room.buildSecondhand(scene, angle+2+c-path.to_door, (angle+c)%4);
@@ -279,7 +241,7 @@ Room.prototype.buildSecondhand = function(scene, angle, side) {
 					mesh.position.x = (side-2)*ROOM_WIDTH;
 				}
 				scene.add(mesh);
-				mesh = new THREE.Mesh(FRAME_GEOM, path.to_room.materials[0]);
+				mesh = new THREE.Mesh(FRAME_GEOM, getDarkVariant(path.to_room.myColor));
 				mesh.rotation.y = (angle + c) * Math.PI / 2;
 				if (side%2 == 0) {
 					mesh.position.z = (side-1)*ROOM_WIDTH;
@@ -294,6 +256,61 @@ Room.prototype.buildSecondhand = function(scene, angle, side) {
 
 Room.prototype.makeDoor = function() {
 	return new THREE.Mesh(DOOR_GEOM, this.materials[0]);
+}
+
+function getNewMaterial(pcolor) {
+	return new THREE.ShaderMaterial(	
+	{
+		uniforms: {
+			"mNear": { type: "f", value: 1.0 },
+			"mFar" : { type: "f", value: 35.0 },
+			"color": { type: "v3", value: new THREE.Vector3( ((pcolor & 0xFF0000) >> 16) / 255, ((pcolor & 0x00FF00) >> 8) / 255, (pcolor & 0x0000FF) / 255 ) },
+			"opacity" : { type: "f", value: 1.0 }
+
+		},
+
+		vertexShader: [
+
+			"void main() {",
+
+				"gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );",
+
+			"}"
+
+		].join("\n"),
+
+		fragmentShader: [
+
+			"uniform float mNear;",
+			"uniform float mFar;",
+			"uniform vec3 color;",
+			"uniform float opacity;",
+
+			"void main() {",
+
+				"float depth = gl_FragCoord.z / gl_FragCoord.w;",
+				"float f = 1.0 - smoothstep( mNear, mFar, depth );",
+				"gl_FragColor = vec4( vec3(f) * color, opacity );",
+
+			"}"
+
+		].join("\n")
+
+	});
+}
+
+function getDarkVariant(myColor) {
+	var darkVar = .9;
+	oldColor = new THREE.Vector3( ((myColor & 0xFF0000) >> 16) / 255, ((myColor & 0x00FF00) >> 8) / 255, (myColor & 0x0000FF) / 255 );
+	oldColor.x = oldColor.x * darkVar;
+	console.log("cX: " + oldColor.x);
+	oldColor.y = oldColor.y * darkVar;
+	console.log("cY: " + oldColor.y);
+	oldColor.z = oldColor.z * darkVar;
+	console.log("cZ: " + oldColor.z);
+	var newColor = (((oldColor.x * 255) << 16) & 0xFF0000) | (((oldColor.y * 255) << 8) & 0x00FF00) | ((oldColor.z * 255) & 0x0000FF);
+	console.log("newColor: " + newColor);
+	return getNewMaterial(newColor);
 }
 
 

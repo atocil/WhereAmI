@@ -14,10 +14,10 @@
 			var scene = new THREE.Scene();
 
 			//<FOV>, <ASPECTRATIO>, <NEARCLIP>, <FARCLIP>
-			var camera = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 0.1, 20 );
+			var camera = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 0.1, 40 );
 			camera.rotation = new THREE.Euler( 0, 0, 0, 'YXZ' );
 
-			var renderer = new THREE.WebGLRenderer();
+			var renderer = new THREE.WebGLRenderer({ antialias: true });
 			// renderer.shadowMapEnabled = true;
 			// renderer.shadowMapSoft = true;
 
