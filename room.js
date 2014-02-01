@@ -67,7 +67,7 @@ FRAME_GEOM.faces.push(new THREE.Face3(13,9,8));
 FRAME_GEOM.faces.push(new THREE.Face3(13,14,10));
 FRAME_GEOM.faces.push(new THREE.Face3(10,8,13));
 
-
+var menu = true;
 function Room(pcolor) {
 	this.myColor = pcolor;
 	this.paths = new Array(null, null, null, null);
@@ -180,15 +180,38 @@ Room.prototype.visit = function() {
 }
 
 Room.prototype.buildFirsthand = function(scene, angle) {
-	var directionalLight = new THREE.DirectionalLight( 0xffffff, 0.9 );
-	directionalLight.position.set( 0, 4, 8 );
-
+	// var directionalLight = new THREE.DirectionalLight( 0xffffff, 0.9 );
+	// directionalLight.position.set( 0, 4, 8 );
 	
-	directionalLight.castShadow = true;
-	//this.castShadow = true;
-	this.receiveShadow = true;
-	scene.add( directionalLight );
-
+	// directionalLight.castShadow = true;
+	// //this.castShadow = true;
+	// this.receiveShadow = true;
+	// scene.add( directionalLight );
+	if(menu) {
+		if(this.paths[EAST] != null) {
+			var rightText = new THREE.Mesh(new THREE.TextGeometry("Easy", {font: 'optimer', weight: 'bold', size: .6, height: .2}), new THREE.MeshBasicMaterial(this.paths[EAST].to_room.myColor));
+			scene.add(rightText);
+			rightText.rotation.y = 7*Math.PI / 4;
+			rightText.position.x = ROOM_OFFSET - 1;
+			rightText.position.y = DOOR_HEIGHT + .5;
+		}
+		if(this.paths[WEST] != null) {
+			var leftText = new THREE.Mesh(new THREE.TextGeometry("Medium", {font: 'optimer', weight: 'bold', size: .6, height: .2}), new THREE.MeshBasicMaterial(this.paths[WEST].to_room.myColor));
+			scene.add(leftText);
+			leftText.rotation.y = Math.PI / 4;
+			leftText.position.x = -ROOM_OFFSET;
+			leftText.position.z = 1.7;
+			leftText.position.y = DOOR_HEIGHT + .5;
+		}
+		if(this.paths[SOUTH] != null) {
+			var endText = new THREE.Mesh(new THREE.TextGeometry("Hard", {font: 'optimer', weight: 'bold', size: .6, height: .2}), new THREE.MeshBasicMaterial(this.paths[SOUTH].to_room.myColor));
+			scene.add(endText);
+			//leftText.rotation.y = Math.PI / 4;
+			endText.position.z = -ROOM_OFFSET;
+			endText.position.x = -1;
+			endText.position.y = DOOR_HEIGHT + .5;
+		}
+	}
 
 
 	var mesh = THREE.SceneUtils.createMultiMaterialObject(this.geometry, this.materials);
@@ -262,8 +285,8 @@ function getNewMaterial(pcolor) {
 	return new THREE.ShaderMaterial(	
 	{
 		uniforms: {
-			"mNear": { type: "f", value: 1.0 },
-			"mFar" : { type: "f", value: 35.0 },
+			"mNear": { type: "f", value: -8 },
+			"mFar" : { type: "f", value: 30.0 },
 			"color": { type: "v3", value: new THREE.Vector3( ((pcolor & 0xFF0000) >> 16) / 255, ((pcolor & 0x00FF00) >> 8) / 255, (pcolor & 0x0000FF) / 255 ) },
 			"opacity" : { type: "f", value: 1.0 }
 
@@ -303,13 +326,9 @@ function getDarkVariant(myColor) {
 	var darkVar = .9;
 	oldColor = new THREE.Vector3( ((myColor & 0xFF0000) >> 16) / 255, ((myColor & 0x00FF00) >> 8) / 255, (myColor & 0x0000FF) / 255 );
 	oldColor.x = oldColor.x * darkVar;
-	console.log("cX: " + oldColor.x);
 	oldColor.y = oldColor.y * darkVar;
-	console.log("cY: " + oldColor.y);
 	oldColor.z = oldColor.z * darkVar;
-	console.log("cZ: " + oldColor.z);
 	var newColor = (((oldColor.x * 255) << 16) & 0xFF0000) | (((oldColor.y * 255) << 8) & 0x00FF00) | ((oldColor.z * 255) & 0x0000FF);
-	console.log("newColor: " + newColor);
 	return getNewMaterial(newColor);
 }
 
