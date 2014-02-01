@@ -67,7 +67,7 @@ FRAME_GEOM.faces.push(new THREE.Face3(13,9,8));
 FRAME_GEOM.faces.push(new THREE.Face3(13,14,10));
 FRAME_GEOM.faces.push(new THREE.Face3(10,8,13));
 
-var menu = true;
+menu = true;
 
 Array.prototype.clear = function() {
 	while(length > 0)

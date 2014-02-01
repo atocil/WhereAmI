@@ -70,6 +70,13 @@ function reset_rooms_visited(rooms)
 
 function gen_1()
 {
+	//nuke
+	while(scene.children.length > 0) {
+		var child = scene.children[scene.children.length - 1];
+		scene.remove(child);
+		//renderer.deallocateObject(child);
+	}
+
 	var rooms = new Array();
 
 	for(var i = 0; i < 2; i ++) {
@@ -147,6 +154,14 @@ function gen_3()
 }
 
 function gen_menu() {
+
+	//nuke
+	while(scene.children.length > 0) {
+		var child = scene.children[scene.children.length - 1];
+		scene.remove(child);
+		//renderer.deallocateObject(child);
+	}
+
 	var rooms = new Array();
 
 	rooms[0] = new Room(colors[11]);
