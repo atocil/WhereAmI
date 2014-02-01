@@ -68,34 +68,76 @@ function reset_rooms_visited(rooms)
 	}
 }
 
-function gen_test_6_2()
+function gen_1()
 {
 	var rooms = new Array();
 
-	for(var i = 0; i < 6; i ++) {
+	for(var i = 0; i < 2; i ++) {
 		rooms[i] = new Room(colors[i]);
 	}
 
-	rooms[0].paths[NORTH] = new Path(rooms[5], NORTH);
-	rooms[0].paths[SOUTH] = new Path(rooms[3], NORTH);
-	rooms[0].paths[WEST]  = new Path(rooms[0], WEST);
+	rooms[0].paths[NORTH] = new Path(rooms[1], SOUTH);
+	rooms[1].paths[SOUTH] = new Path(rooms[0], NORTH);
 
-	rooms[1].paths[NORTH] = new Path(rooms[4], WEST);
-	rooms[1].paths[SOUTH] = new Path(rooms[2], SOUTH);
+	rooms[0].object = new THREE.Mesh(new THREE.CubeGeometry(1, 1, 1), rooms[1].materials[0]);
+	rooms[1].object = new THREE.Mesh(new THREE.CubeGeometry(1, 1, 1), rooms[0].materials[0]);
 
-	rooms[2].paths[NORTH] = new Path(rooms[4], NORTH);
-	rooms[2].paths[SOUTH] = new Path(rooms[5], NORTH);
+	for(i = 0; i < rooms.length; i ++) {
+		rooms[i].buildGeometry();
+	}
 
-	rooms[3].paths[NORTH] = new Path(rooms[2], NORTH);
-	rooms[3].paths[SOUTH] = new Path(rooms[0], NORTH);
+	return rooms;
+}
 
-	rooms[4].paths[NORTH] = new Path(rooms[1], NORTH);
-	rooms[4].paths[SOUTH] = new Path(rooms[3], NORTH);
+function gen_2()
+{
+	var rooms = new Array();
 
-	rooms[5].paths[NORTH] = new Path(rooms[4], NORTH);
-	rooms[5].paths[SOUTH] = new Path(rooms[3], SOUTH);
+	for(var i = 0; i < 4; i ++) {
+		rooms[i] = new Room(colors[i]);
+	}
+
+	rooms[0].paths[NORTH] = new Path(rooms[1], SOUTH);
+	rooms[0].paths[EAST] = new Path(rooms[3], WEST);
+
+	rooms[1].paths[SOUTH] = new Path(rooms[0], NORTH);
+	rooms[1].paths[EAST] = new Path(rooms[2], WEST);
+
+	rooms[2].paths[WEST] = new Path(rooms[1], EAST);
+	rooms[2].paths[SOUTH] = new Path(rooms[3], NORTH);
+
+	rooms[3].paths[NORTH] = new Path(rooms[2], SOUTH);
+	rooms[3].paths[WEST] = new Path(rooms[0], EAST);
 
 	assignObjects(rooms);
+
+	for(i = 0; i < rooms.length; i ++) {
+		rooms[i].buildGeometry();
+	}
+
+	return rooms;
+}
+
+function gen_3()
+{
+	var rooms = new Array();
+
+	for(var i = 0; i < 3; i ++) {
+		rooms[i] = new Room(colors[i]);
+	}
+
+	rooms[0].paths[NORTH] = new Path(rooms[1], SOUTH);
+
+	rooms[1].paths[NORTH] = new Path(rooms[2], SOUTH);
+	rooms[1].paths[SOUTH] = new Path(rooms[0], NORTH);
+
+	rooms[2].paths[NORTH] = new Path(rooms[2], NORTH);
+	rooms[2].paths[EAST] = new Path(rooms[0], WEST);
+	rooms[2].paths[SOUTH] = new Path(rooms[2], NORTH);
+
+	rooms[0].object = new THREE.Mesh(new THREE.CubeGeometry(1, 1, 1), rooms[1].materials[0]);
+	rooms[1].object = new THREE.Mesh(new THREE.CubeGeometry(1, 1, 1), rooms[2].materials[0]);
+	rooms[2].object = new THREE.Mesh(new THREE.CubeGeometry(1, 1, 1), rooms[0].materials[0]);
 
 	for(i = 0; i < rooms.length; i ++) {
 		rooms[i].buildGeometry();
