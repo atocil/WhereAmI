@@ -4,43 +4,52 @@ function generate_world(num_rooms, num_doors)
 
 	for(var i = 0; i < num_rooms; i ++) {
 		rooms[i] = new Room(colors[i]);
-
 	}
 
-	var temp_room = room[0];
+	var temp_room = rooms[0];
 
 	for(i = 0; i < num_doors; i ++) {
 
-		for(var j = 0; j < num_rooms; j ++) {
-			temp_room.visited = true;
-
+		var rooms_left = rooms.slice(0);
+		rooms_left.splice(rooms_left.indexOf(temp_room), 1);
+		while(rooms_left.length > 0) {
+			console.log("length: " + rooms_left.length);
 			//Which door this path will leave from
-			var door_num = int(Math.random() * num_doors);
-			while(temp_room.paths[door_num] != null) {
-				door_num = int(Math.random() * num_doors);
+			var doors = new Array();
+			for (var c = 0; c < 4; c++) {
+				if (temp_room.paths[c] == null)
+					doors.push(c)
 			}
+			if (doors.length == 0) {
+				alert("NO MORE DOORS?!?!?!");
+			}
+			door_num = Math.floor(Math.random() * doors.length);
 
 			//Which room this path will go to
-			var to_room = int(Math.random() * num_rooms);
-			while(rooms[to_room].visited) {
-				to_room = int(Math.random() * num_rooms);
+			if (rooms_left.length == 0) {
+				alert("NO MORE ROOMS?!?!?!");
 			}
+			var to_room = rooms_left.splice(Math.floor(Math.random() * rooms_left.length), 1)[0];
 
 			//Which door you will emerge from in your new room
-			var to_door = int(Math.random() * num_doors);
+			var to_door = Math.floor(Math.random() * num_doors);
 
 			temp_room.paths[door_num] = new Path(to_room, to_door);
 
-			temp_room = rooms[to_room];
+			temp_room = to_room;
 		}
 
-		while(temp_room.paths[door_num] == null) {
-				door_num = int(Math.random() * num_doors);
+		var doors2 = new Array();
+		for (var c = 0; c < 4; c++) {
+			if (temp_room.paths[c] == null)
+				doors2.push(c)
 		}
+		if (doors2.length == 0)
+			alert("WTF DOORS?!")
+		door_num = Math.floor(Math.random() * doors2.length);
 
-		temp_room.paths[door_num] = new Path(int(Math.random() * num_rooms), int(Math.random() * num_doors));
+		temp_room.paths[door_num] = new Path(rooms[Math.floor(Math.random() * num_rooms)], Math.floor(Math.random() * num_doors));
 
-		reset_rooms_visited(rooms);
 	}
 
 	for(i = 0; i < rooms.length; i ++) {
@@ -48,6 +57,8 @@ function generate_world(num_rooms, num_doors)
 	}
 
 	assignObjects(rooms);
+
+	return rooms;
 }
 
 function reset_rooms_visited(rooms)
@@ -67,8 +78,9 @@ function gen_test_6_2()
 
 	rooms[0].paths[NORTH] = new Path(rooms[5], NORTH);
 	rooms[0].paths[SOUTH] = new Path(rooms[3], NORTH);
+	rooms[0].paths[WEST]  = new Path(rooms[0], WEST);
 
-	rooms[1].paths[NORTH] = new Path(rooms[4], NORTH);
+	rooms[1].paths[NORTH] = new Path(rooms[4], WEST);
 	rooms[1].paths[SOUTH] = new Path(rooms[2], SOUTH);
 
 	rooms[2].paths[NORTH] = new Path(rooms[4], NORTH);
@@ -96,13 +108,13 @@ function assignObjects(rooms)
 {
 	var cubeGeom = new THREE.CubeGeometry(1, 1, 1);
 	for(var i = 0; i < rooms.length; i ++) {
-		var color_num = int(Math.random() * rooms.length);
+		var color_num = Math.floor(Math.random() * rooms.length);
 		while(rooms[color_num].visited) {
-			color_num = int(Math.random() * rooms.length);
+			color_num = Math.floor(Math.random() * rooms.length);
 		}
 
 		rooms[color_num].visited = true;
 		rooms[i].objects = new Array();
-		rooms[i].objects[0] = new THREE.mesh(cubeGeom, rooms[color_num].materials[0]);
+		rooms[i].objects[0] = new THREE.Mesh(cubeGeom, rooms[color_num].materials[0]);
 	}
 }
