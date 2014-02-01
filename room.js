@@ -14,9 +14,6 @@ DOOR_OFFSET = DOOR_WIDTH/2;
 
 FRAME_DEPTH = .15;
 
-BLOCK_OFFSET = .5;
-BFRAME_OFFSET = .05;
-
 
 DOOR_GEOM = new THREE.Geometry();
 DOOR_GEOM.vertices.push(new THREE.Vector3(-DOOR_OFFSET, 0, -ROOM_OFFSET));
@@ -264,7 +261,6 @@ Room.prototype.buildFirsthand = function(scene, angle) {
 	if (this.object != null) {
 		this.object.position.set(0,0,0);
 		this.object.rotation.y = 0;
-		this.object.add(OBJECT_GEOM);
 		scene.add(this.object);
 	}
 	for (var c = 0; c < 4; c++) {
