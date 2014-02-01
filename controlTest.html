@@ -7,6 +7,7 @@
 		<script src="https://rawgithub.com/mrdoob/three.js/master/build/three.js"></script>
 		<script src="colors.js"></script>
 		<script src="room.js"></script>
+		<script src="path.js"></script>
 		<script src="worldgen.js"></script>
 		<script>
 			ROOM_TOLERANCE = .1;
@@ -23,14 +24,24 @@
 			renderer.setSize( window.innerWidth, window.innerHeight );
 			document.body.appendChild( renderer.domElement );
 
-			var theRoom = new Room(0xFF0000);
-			theRoom.paths[NORTH] = new Array();
-			theRoom.paths[WEST] = new Array();
-			theRoom.paths[SOUTH] = new Array();
-			theRoom.paths[EAST] = new Array();
+			var north = new Room(0x00FF00);
+			var west  = new Room(0xFFFF00);
+			var south = new Room(0xFF0000);
+			var east  = new Room(0x0000FF);
+			var theRoom = new Room(0xFFFFFF);
+			theRoom.paths[NORTH] = new Path(north, 0);
+			theRoom.paths[WEST] = new Path(west, 1);
+			theRoom.paths[SOUTH] = new Path(south, 1);
+			theRoom.paths[EAST] = new Path(south, 3);
+			south.paths[NORTH] = new Path(theRoom, 2);
+			north.paths[WEST] = new Path(south, 1)
 
 			theRoom.buildGeometry();
-			theRoom.buildFirsthand(scene);
+			north.buildGeometry();
+			west.buildGeometry();
+			south.buildGeometry();
+			east.buildGeometry();
+			theRoom.buildFirsthand(scene, 0);
 
 			camera.position.x = 0;
 			camera.position.y = 2.6;
