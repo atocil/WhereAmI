@@ -27,6 +27,16 @@
 
 			var holding = null;
 
+
+
+			window.onresize = function() {
+				renderer.setSize( window.innerWidth, window.innerHeight );
+				camera.aspect = window.innerWidth / window.innerHeight;
+				camera.updateProjectionMatrix();
+			}
+
+
+
 			// var directionalLight = new THREE.DirectionalLight( 0xffffff , 10);
 			// directionalLight.position.set( 1, 1, 1 ).normalize();
 			// scene.add(directionalLight);
