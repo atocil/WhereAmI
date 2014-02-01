@@ -67,25 +67,16 @@
 				if(holding == null) {
 					holding = theRoom.object;
 					theRoom.object = null;
-					//scene.remove(holding);
+					theRoom.clearCopies(scene);
 					holding.scale = new THREE.Vector3(.7, .7, .7);
 				}
 				else if(theRoom.object == null) {
-					holding.scale = new THREE.Vector3(1, 1, 1);
-					holding.position.set(0, 0, 0);
-					holding.rotation.y = 0;
-					theRoom.object = holding;
-					holding = null;
+					holding = theRoom.placeBlock(scene, holding);
 					isGameSolved();
 				}
 				else {
-					holding.scale = new THREE.Vector3(1, 1, 1);
-					holding.position.set(0, 0, 0);
-					holding.rotation.y = 0;
-					var temp = holding;
-					holding = theRoom.object;
+					holding = theRoom.placeBlock(scene, holding);
 					holding.scale = new THREE.Vector3(.7, .7, .7);
-					theRoom.object = temp;
 				}
 			}
 
@@ -197,6 +188,11 @@
 					scene.remove(child);
 					//renderer.deallocateObject(child);
 				}
+
+				for (var c = 0; c < rooms.length; c++) {
+					rooms[c].resetCounts();
+				}
+
 				if(holding != null)
 					scene.add(holding);
 
