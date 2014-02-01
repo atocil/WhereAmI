@@ -1,18 +1,22 @@
+<!DOCTYPE HTML><meta charset="UTF-8">
 <html>
 	<head>
 		<title>Where Am I?</title>
 		<style>canvas { width: 100%; height: 100% }</style>
 	</head>
 	<body>
+		<h1 id="score" style="color:white;position:fixed;top:5px;left:13px;">Loading...</h1>
 		<script src="https://rawgithub.com/mrdoob/three.js/master/build/three.js"></script>
 		<script src="gamepad.js"></script>
 		<script src="colors.js"></script>
+		<script src="optimer_bold.typeface.js"></script>
 		<script src="room.js"></script>
 		<script src="path.js"></script>
 		<script src="worldgen.js"></script>
 		<script src="control.js"></script>
-		<script src="optimer_bold.typeface.js"></script>
 		<script>
+			var score = document.getElementById("score");
+
 			//Start with 3 parts, scene, camera and renderer
 			var scene = new THREE.Scene();
 
@@ -75,12 +79,12 @@
 				}
 				else if(theRoom.object == null) {
 					holding = theRoom.placeBlock(scene, holding);
-					isGameSolved();
 				}
 				else {
 					holding = theRoom.placeBlock(scene, holding);
 					holding.scale = new THREE.Vector3(.7, .7, .7);
 				}
+				isGameSolved();
 			}
 
 			
@@ -224,7 +228,7 @@
 				//console.log("x: " + camera.position.x + "   z: " + camera.position.z);
 				renderer.render(scene, camera);
 			}
-			
+			score.innerHTML = "";
 			render();
 
 			function rebuild(side) {
@@ -260,13 +264,20 @@
 			}
 
 			function isGameSolved() {
+				var count = 0;
 				for (var c = 0; c < rooms.length; c++) {
-					if (rooms[c].object == null || rooms[c].object.material != rooms[c].materials[0])
-						return false;
+					if (rooms[c].object != null && rooms[c].object.material == rooms[c].materials[0])
+						count++;
 				}
-				alert("YOU WON!!!!");
-				menu = true;
-				runGen(gen_menu);
+				if (count >= rooms.length) {
+					score.innerHTML = "";
+					alert("YOU WON!!!!");
+					menu = true;
+					runGen(gen_menu);
+					return true;
+				}
+				score.innerHTML = ""+count+" / "+rooms.length;
+				return false;
 			}
 
 			function runGen(generate) {
@@ -280,6 +291,8 @@
 				camera.position.x = 0;
 				camera.position.y = 2.6;
 				camera.position.z = 0;
+				camera.rotation.y = 0;
+				camera.rotation.x = 0;
 
 				radius = 10;
 
