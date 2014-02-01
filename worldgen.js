@@ -54,3 +54,30 @@ function reset_rooms_visited(rooms)
 		rooms[i].visited = false;
 	}
 }
+
+function gen_test_6_2()
+{
+	var rooms = new Array();
+
+	for(var i = 0; i < 6; i ++) {
+		rooms[i] = new Room(colors[i]);
+	}
+
+	rooms[0].paths[NORTH] = new Path(5, NORTH);
+	rooms[0].paths[SOUTH] = new Path(3, NORTH);
+
+	rooms[1].paths[NORTH] = new Path(4, NORTH);
+	rooms[1].paths[SOUTH] = new Path(2, SOUTH);
+
+	rooms[2].paths[NORTH] = new Path(4, NORTH);
+	rooms[2].paths[SOUTH] = new Path(5, NORTH);
+
+	rooms[3].paths[NORTH] = new Path(2, NORTH);
+	rooms[3].paths[SOUTH] = new Path(0, NORTH);
+
+	rooms[4].paths[NORTH] = new Path(1, NORTH);
+	rooms[4].paths[SOUTH] = new Path(3, NORTH);
+
+	rooms[5].paths[NORTH] = new Path(4, NORTH);
+	rooms[5].paths[SOUTH] = new Path(3, SOUTH);
+}
