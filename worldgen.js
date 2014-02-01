@@ -42,7 +42,7 @@ function generate_world(num_rooms, num_doors)
 		var doors2 = new Array();
 		for (var c = 0; c < 4; c++) {
 			if (temp_room.paths[c] == null)
-				doors2.push(c)
+				doors2.push(c);
 		}
 		if (doors2.length == 0)
 			alert("WTF DOORS?!");

@@ -67,18 +67,18 @@ FRAME_GEOM.faces.push(new THREE.Face3(13,9,8));
 FRAME_GEOM.faces.push(new THREE.Face3(13,14,10));
 FRAME_GEOM.faces.push(new THREE.Face3(10,8,13));
 
-rightText = new THREE.Mesh(new THREE.TextGeometry("Easy", {font: 'optimer', weight: 'bold', size: .6, height: .2}), new THREE.MeshBasicMaterial(0xFFFFFF));
+rightText = new THREE.Mesh(new THREE.TextGeometry("Easy", {font: 'optimer', weight: 'bold', size: .6, height: .2}), new THREE.MeshBasicMaterial(0x000000));
 rightText.rotation.y = 7*Math.PI / 4;
 rightText.position.x = ROOM_OFFSET - 1;
 rightText.position.y = DOOR_HEIGHT + .5;
 
-leftText = new THREE.Mesh(new THREE.TextGeometry("Medium", {font: 'optimer', weight: 'bold', size: .6, height: .2}), new THREE.MeshBasicMaterial(0xFFFFFF));
+leftText = new THREE.Mesh(new THREE.TextGeometry("Medium", {font: 'optimer', weight: 'bold', size: .6, height: .2}), new THREE.MeshBasicMaterial(0x000000));
 leftText.rotation.y = Math.PI / 4;
 leftText.position.x = -ROOM_OFFSET;
 leftText.position.z = 1.7;
 leftText.position.y = DOOR_HEIGHT + .5;
 
-endText = new THREE.Mesh(new THREE.TextGeometry("Hard", {font: 'optimer', weight: 'bold', size: .6, height: .2}), new THREE.MeshBasicMaterial(0xFFFFFF));
+endText = new THREE.Mesh(new THREE.TextGeometry("Hard", {font: 'optimer', weight: 'bold', size: .6, height: .2}), new THREE.MeshBasicMaterial(0x000000));
 endText.position.z = -ROOM_OFFSET;
 endText.position.x = -1;
 endText.position.y = DOOR_HEIGHT + .5;
