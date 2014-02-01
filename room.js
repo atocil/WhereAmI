@@ -11,9 +11,17 @@ DOOR_WIDTH = 2;
 DOOR_HEIGHT = 2*DOOR_WIDTH;
 DOOR_OFFSET = DOOR_WIDTH/2;
 
+DOOR_GEOM = new THREE.Geometry();
+DOOR_GEOM.vertices.push(new THREE.Vector3(-DOOR_OFFSET, 0, -ROOM_OFFSET));
+DOOR_GEOM.vertices.push(new THREE.Vector3( DOOR_OFFSET, 0, -ROOM_OFFSET));
+DOOR_GEOM.vertices.push(new THREE.Vector3( DOOR_OFFSET, DOOR_HEIGHT, -ROOM_OFFSET));
+DOOR_GEOM.vertices.push(new THREE.Vector3(-DOOR_OFFSET, DOOR_HEIGHT, -ROOM_OFFSET));
+DOOR_GEOM.faces.push(new THREE.Face3(0,1,2));
+DOOR_GEOM.faces.push(new THREE.Face3(2,3,0));
+
 function Room(pcolor) {
 	this.paths = new Array(null, null, null, null);
-	this.material = new THREE.MeshLambertMaterial({color: 0x004400})
+	this.materials = [new THREE.MeshLambertMaterial({color: pcolor}), new THREE.MeshBasicMaterial({color:0x000000, wireframe:true})];
 	this.visited = false;
 	this.geometry = null;
 }
@@ -118,8 +126,44 @@ Room.prototype.visit = function() {
 	this.visited = true;
 }
 
-Room.prototype.buildFirsthand = function(scene) {
-	scene.add(new THREE.Mesh(this.geometry, this.material));
+Room.prototype.buildFirsthand = function(scene, angle) {
+	var mesh = THREE.SceneUtils.createMultiMaterialObject(this.geometry, this.materials);
+	mesh.rotation.y = angle * Math.PI/2;
+	scene.add(mesh);
+	for (var c = 0; c < 4; c++) {
+		var path = this.paths[c];
+		if (path != null)
+			path.to_room.buildSecondhand(scene, angle+2+c-path.to_door, (angle+c)%4);
+	}
+}
+
+Room.prototype.buildSecondhand = function(scene, angle, side) {
+	var mesh = new THREE.Mesh(this.geometry, this.materials[0]);
+	mesh.rotation.y = angle * Math.PI/2;
+	if (side%2 == 0) {
+		mesh.position.z = (side-1)*ROOM_WIDTH;
+	} else {
+		mesh.position.x = (side-2)*ROOM_WIDTH;
+	}
+	scene.add(mesh);
+
+	for (var c = 0; c < 4; c++) {
+		var path = this.paths[c];
+		if (path != null) {
+			mesh = path.to_room.makeDoor();
+			mesh.rotation.y = (angle+c) * Math.PI/2;
+			if (side%2 == 0) {
+				mesh.position.z = (side-1)*ROOM_WIDTH;
+			} else {
+				mesh.position.x = (side-2)*ROOM_WIDTH;
+			}
+			scene.add(mesh);
+		}
+	}
+}
+
+Room.prototype.makeDoor = function() {
+	return new THREE.Mesh(DOOR_GEOM, this.materials[0]);
 }
 
 
