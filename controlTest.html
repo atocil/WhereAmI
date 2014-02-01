@@ -154,8 +154,8 @@
 				
 				if(holding != null) {
 					holding.position.y = 1.5;
-					holding.position.x = camera.position.x - Math.sin(camera.rotation.y);
-					holding.position.z = camera.position.z - Math.cos(camera.rotation.y);
+					holding.position.x = camera.position.x - Math.sin(camera.rotation.y - Math.PI/4);
+					holding.position.z = camera.position.z - Math.cos(camera.rotation.y - Math.PI/4);
 					holding.rotation.y = camera.rotation.y;
 				}
 
