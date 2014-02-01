@@ -232,7 +232,7 @@
 			render();
 
 			function rebuild(side) {
-				var path = theRoom.paths[(side - angle + 4) % 4];
+				var path = theRoom.paths[(side - angle + 8) % 4];
 				if(path != null) {
 					theRoom = path.to_room;
 				} else {
@@ -255,7 +255,7 @@
 
 				console.log("old angle: " + angle);
 
-				angle = 2 + side - path.to_door;
+				angle = (6 + side - path.to_door)%4;
 				console.log("new angle: " + angle);
 				console.log("side: " + side);
 				theRoom.buildFirsthand(scene, angle);
