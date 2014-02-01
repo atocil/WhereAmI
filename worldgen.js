@@ -146,6 +146,42 @@ function gen_3()
 	return rooms;
 }
 
+function gen_menu() {
+	var rooms = new Array();
+
+	rooms[0] = new Room(colors[11]);
+	rooms[1] = new Room(colors[12]);
+	rooms[2] = new Room(colors[1]);
+	rooms[3] = new Room(colors[2]);
+	rooms[4] = new Room(colors[3]);
+
+	rooms[0].paths[NORTH] = new Path(rooms[1], NORTH);
+
+	
+	rooms[1].paths[SOUTH] = new Path(rooms[3], WEST);
+	rooms[1].paths[WEST] = new Path(rooms[2], NORTH);
+	rooms[1].paths[EAST] = new Path(rooms[4], EAST);
+
+
+	rooms[2].paths[NORTH] = new Path(rooms[1], NORTH);
+	rooms[2].paths[SOUTH] = new Path(rooms[2], NORTH);
+
+
+	rooms[3].paths[NORTH] = new Path(rooms[2], NORTH);
+	rooms[3].paths[SOUTH] = new Path(rooms[0], NORTH);
+
+	rooms[4].paths[NORTH] = new Path(rooms[2], NORTH);
+	rooms[4].paths[SOUTH] = new Path(rooms[0], NORTH);
+
+	//assignObjects(rooms);
+
+	for(i = 0; i < rooms.length; i ++) {
+		rooms[i].buildGeometry();
+	}
+
+	return rooms;
+}
+
 function assignObjects(rooms)
 {
 	var cubeGeom = new THREE.CubeGeometry(1, 1, 1);

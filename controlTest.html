@@ -9,26 +9,18 @@
 		<script src="room.js"></script>
 		<script src="path.js"></script>
 		<script src="worldgen.js"></script>
+		<script src="control.js"></script>
+		<script src="optimer_bold.typeface.js"></script>
 		<script>
 			//Start with 3 parts, scene, camera and renderer
 			var scene = new THREE.Scene();
 
 			//<FOV>, <ASPECTRATIO>, <NEARCLIP>, <FARCLIP>
-			var camera = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 0.1, 40 );
+			var camera = new THREE.PerspectiveCamera( 80, window.innerWidth / window.innerHeight, 0.1, 40 );
 			camera.rotation = new THREE.Euler( 0, 0, 0, 'YXZ' );
 
 			var renderer = new THREE.WebGLRenderer({ antialias: true });
-			// renderer.shadowMapEnabled = true;
-			// renderer.shadowMapSoft = true;
 
-			// renderer.shadowCameraNear = .1;
-			// renderer.shadowCameraFar = camera.far;
-			// renderer.shadowCameraFov = 8;
-
-			// renderer.shadowMapBias = 0.0039;
-			// renderer.shadowMapDarkness = 0.5;
-			// renderer.shadowMapWidth = 1024;
-			// renderer.shadowMapHeight = 1024;
 			renderer.setSize( window.innerWidth, window.innerHeight );
 			document.body.appendChild( renderer.domElement );
 
@@ -38,7 +30,10 @@
 			// directionalLight.position.set( 1, 1, 1 ).normalize();
 			// scene.add(directionalLight);
 
-			var rooms = gen_test_6_2();
+
+
+			//var rooms = gen_test_6_2();
+			var rooms = gen_menu();
 			var theRoom = rooms[0];
 
 			var angle = 0;
@@ -59,123 +54,34 @@
 
 			var HOLDING_Z_OFFSET = 1;
 
-			function attemptGrab() {
-				if(holding == null) {
-					holding = theRoom.object;
-					theRoom.object = null;
-					//scene.remove(holding);
-					holding.scale = new THREE.Vector3(.7, .7, .7);
-				}
-				else if(theRoom.object == null) {
-					holding.scale = new THREE.Vector3(1, 1, 1);
-					holding.position.set(0, 0, 0);
-					holding.rotation.y = 0;
-					theRoom.object = holding;
-					holding = null;
-					isGameSolved();
-				}
-				else {
-					holding.scale = new THREE.Vector3(1, 1, 1);
-					holding.position.set(0, 0, 0);
-					holding.rotation.y = 0;
-					var temp = holding;
-					holding = theRoom.object;
-					holding.scale = new THREE.Vector3(.7, .7, .7);
-					theRoom.object = temp;
-				}
-			}
-
-			document.onkeydown = function(down) {
-
-				switch (down.keyCode) {
-	                case 87: // W
-	                	wIsPressed = true;
-	                break;
-
-	                case 83: // S
-	                	sIsPressed = true;
-	                break;
-
-	                case 65: // A
-	                	aIsPressed = true;
-	                break;
-
-	                case 68: // D
-	     				dIsPressed = true;
-	                break;
-
-	                case 69: //E
-	                	attemptGrab();
-	                break;
-
-	                case 32: // Space
-	                	spaceIsPressed = true;
-	                break;
-
-	                case 16: // lShift
-	                	lShiftIsPressed = true;
-	                break;
-
-	                case 66:
-	                	alert(mouseX);
-	                break;
-				}
-			}
-
-			document.onkeyup = function(up) {
-
-				switch (up.keyCode) {
-	                case 87: // W
-	                	wIsPressed = false;
-	                break;
-
-	                case 83: // S
-	                	sIsPressed = false;
-	                break;
-
-	                case 65: // A
-	                	aIsPressed = false;
-	                break;
-
-	                case 68: // D
-	     				dIsPressed = false;
-	                break;
-
-	                case 32: // Space
-	                	spaceIsPressed = false;
-	                break;
-	                
-	                case 16: // lShift
-	                	lShiftIsPressed = false;
-	                break;	                
-
-	                case 66:
-	                	alert(mouseX);
-	                break;
-				}
-			}
-			
 			var mouseX;
 			var mouseY;
-			document.onmousemove = function(move) {
-				mouseX = move.clientX;
-				mouseY = move.clientY;
-			}
-
-			var mouseDown;
-			document.onmousedown = function(click) {
-				mouseDown = true;
-			}
-
-			document.onmouseup = function(release) {
-				mouseDown = false;
-			}
 
 			var dVert = .1;
 			var theta = 0;
 			var dTheta = .03;
 			var mouseXOld;
 			var mouseYOld;
+
+			function attemptGrab() {
+				if(holding == null) {
+					holding = theRoom.object;
+					theRoom.object = null;
+					theRoom.clearCopies(scene);
+					holding.scale = new THREE.Vector3(.7, .7, .7);
+				}
+				else if(theRoom.object == null) {
+					holding = theRoom.placeBlock(scene, holding);
+					isGameSolved();
+				}
+				else {
+					holding = theRoom.placeBlock(scene, holding);
+					holding.scale = new THREE.Vector3(.7, .7, .7);
+				}
+			}
+
+			
+
 			function updateCamera() {
 				if(wIsPressed == true) {
 					camera.position.x += Math.cos( (Math.PI / 2) + camera.rotation.y) / 5;
@@ -265,6 +171,8 @@
 				//console.log("x: " + camera.position.x + "   z: " + camera.position.z);
 				renderer.render(scene, camera);
 			}
+			
+			render();
 
 			function rebuild(side) {
 				var path = theRoom.paths[(side - angle + 4) % 4];
@@ -280,6 +188,11 @@
 					scene.remove(child);
 					//renderer.deallocateObject(child);
 				}
+
+				for (var c = 0; c < rooms.length; c++) {
+					rooms[c].resetCounts();
+				}
+
 				if(holding != null)
 					scene.add(holding);
 
@@ -302,11 +215,96 @@
 
 				rooms = gen_test_6_2();
 				theRoom = rooms[0];
+				rebuild(0);
 				return true;
 			}
 
+			document.onkeydown = function(down) {
+
+				switch (down.keyCode) {
+	                case 87: // W
+	                	wIsPressed = true;
+	                break;
+
+	                case 83: // S
+	                	sIsPressed = true;
+	                break;
+
+	                case 65: // A
+	                	aIsPressed = true;
+	                break;
+
+	                case 68: // D
+	     				dIsPressed = true;
+	                break;
+
+	                case 69: //E
+	                	attemptGrab();
+	                break;
+
+	                case 32: // Space
+	                	spaceIsPressed = true;
+	                break;
+
+	                case 16: // lShift
+	                	lShiftIsPressed = true;
+	                break;
+
+	                case 66:
+	                	alert(mouseX);
+	                break;
+				}
+			}
+
+			document.onkeyup = function(up) {
+
+				switch (up.keyCode) {
+	                case 87: // W
+	                	wIsPressed = false;
+	                break;
+
+	                case 83: // S
+	                	sIsPressed = false;
+	                break;
+
+	                case 65: // A
+	                	aIsPressed = false;
+	                break;
+
+	                case 68: // D
+	     				dIsPressed = false;
+	                break;
+
+	                case 32: // Space
+	                	spaceIsPressed = false;
+	                break;
+	                
+	                case 16: // lShift
+	                	lShiftIsPressed = false;
+	                break;	                
+
+	                case 66:
+	                	alert(mouseX);
+	                break;
+				}
+			}
 			
-			render();
+
+			document.onmousemove = function(move) {
+				mouseX = move.clientX;
+				mouseY = move.clientY;
+			}
+
+			var mouseDown;
+			document.onmousedown = function(click) {
+				mouseDown = true;
+			}
+
+			document.onmouseup = function(release) {
+				mouseDown = false;
+			}
+			
+			
 		</script>
 	</body>
 </html>
