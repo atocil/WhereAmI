@@ -26,7 +26,7 @@ function Room(pcolor) {
 	{
 		uniforms: {
 			"mNear": { type: "f", value: 1.0 },
-			"mFar" : { type: "f", value: 2000.0 },
+			"mFar" : { type: "f", value: 35.0 },
 			"color": { type: "v3", value: new THREE.Vector3( ((pcolor & 0xFF0000) >> 16) / 255, ((pcolor & 0x00FF00) >> 8) / 255, (pcolor & 0x0000FF) / 255 ) },
 			"opacity" : { type: "f", value: 1.0 }
 
