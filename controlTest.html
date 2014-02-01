@@ -1,24 +1,18 @@
-<!DOCTYPE HTML><meta charset="UTF-8">
 <html>
 	<head>
 		<title>Where Am I?</title>
 		<style>canvas { width: 100%; height: 100% }</style>
 	</head>
 	<body>
-		<h1 id="score" style="color:white;position:fixed;top:5px;left:13px;">Loading...</h1>
 		<script src="https://rawgithub.com/mrdoob/three.js/master/build/three.js"></script>
-		<!--<script src="gamepad.js"></script> -->
-		<script src="optimer_bold.typeface.js"></script>
+		<script src="gamepad.js"></script>
 		<script src="colors.js"></script>
 		<script src="room.js"></script>
 		<script src="path.js"></script>
 		<script src="worldgen.js"></script>
 		<script src="control.js"></script>
+		<script src="optimer_bold.typeface.js"></script>
 		<script>
-
-
-			var score = document.getElementById("score");
-
 			//Start with 3 parts, scene, camera and renderer
 			var scene = new THREE.Scene();
 
@@ -44,36 +38,8 @@
 			var rooms;
 			var theRoom;
 
-			var particleCount = 120;
-			var particles = new THREE.Geometry();
-
-			// now create the individual particles
-			for (var p = 0; p < particleCount; p++) {
-
-			  // create a particle with random
-			  // position values, -250 -> 250
-			  var pX = Math.random() * 1 - .5;
-			  var pY = Math.random() * 1 - .5;
-			  var pZ = Math.random() * 1 - .5;
-			  var particle = new THREE.Vertex(
-			        new THREE.Vector3(pX, pY, pZ)
-			      );
-
-			  // add it to the geometry
-			  particles.vertices.push(particle);
-			}
-
-			var pMaterial = new THREE.ParticleBasicMaterial({
-			  color: 0xFFFFFF,
-			  size: 20,
-			  map: THREE.ImageUtils.loadTexture(
-			    "particle.png"
-			  ),
-			  blending: THREE.AdditiveBlending,
-			  transparent: true
-			});
-
 			var angle;
+			var lastA = false;
 
 			camera.position.x = 0;
 			camera.position.y = 2.6;
@@ -109,13 +75,12 @@
 				}
 				else if(theRoom.object == null) {
 					holding = theRoom.placeBlock(scene, holding);
+					isGameSolved();
 				}
 				else {
 					holding = theRoom.placeBlock(scene, holding);
 					holding.scale = new THREE.Vector3(.7, .7, .7);
 				}
-				isGameSolved();
-
 			}
 
 			
@@ -148,6 +113,39 @@
 				// 	camera.position.y += dVert;
 				// }
 
+				if(Gamepad.supported) {
+
+					var pad = Gamepad.getStates();
+					pad = pad[0];
+
+					if(pad) {
+						if(Math.abs(pad.leftStickX) > 0.2) {
+							camera.position.x += Math.cos(camera.rotation.y) * (pad.leftStickX / 4);
+                			camera.position.z -= Math.sin(camera.rotation.y) * (pad.leftStickX / 4);
+						}
+					
+						if(Math.abs(pad.leftStickY) > 0.2) {
+							camera.position.x += Math.cos( (Math.PI / 2) + camera.rotation.y) * (pad.leftStickY / -4);
+	                		camera.position.z -= Math.sin( (Math.PI / 2) + camera.rotation.y) * (pad.leftStickY / -4);
+						}
+
+						if(Math.abs(pad.rightStickX) > 0.2) {
+							camera.rotation.y -= 0.05 * pad.rightStickX;
+						}
+
+						if(Math.abs(pad.rightStickY) > 0.2) {
+							camera.rotation.x -= 0.05 * pad.rightStickY;
+						}
+
+						if(pad.faceButton0) {
+							if(!lastA) {
+								attemptGrab();
+							}
+						}
+						lastA = pad.faceButton0;
+					}
+				}
+
 				var oldAngle = angle;
 				if(camera.position.x > ROOM_OFFSET - ROOM_TOLERANCE) {
 					if(camera.position.z > -DOOR_OFFSET + ROOM_TOLERANCE 
@@ -155,7 +153,7 @@
 						&& rebuild(3) ) {
 							if((menu)) {
 								menu = false;
-								runGen(gen_2);
+								runGen(gen_5);
 							} else {
 								camera.position.x = -ROOM_OFFSET + ROOM_TOLERANCE;
 							}
@@ -169,7 +167,7 @@
 						&& rebuild(1) ) {
 							if(menu) {
 								menu = false;
-								runGen(gen_5);
+								runGen(gen_1);
 							} else {
 								camera.position.x = ROOM_OFFSET - ROOM_TOLERANCE;
 							}
@@ -226,7 +224,7 @@
 				//console.log("x: " + camera.position.x + "   z: " + camera.position.z);
 				renderer.render(scene, camera);
 			}
-			score.innerHTML = "";
+			
 			render();
 
 			function rebuild(side) {
@@ -262,28 +260,13 @@
 			}
 
 			function isGameSolved() {
-				var count = 0;
-				var particleSystem;
 				for (var c = 0; c < rooms.length; c++) {
-					if (rooms[c].object != null && rooms[c].object.material == rooms[c].materials[0]) {
-						particleSystem = new THREE.ParticleSystem( particles, pMaterial );
-						particleSystem.position.x = rooms[c].object.position.x;
-						particleSystem.position.z = rooms[c].object.position.z;
-						particleSystem.position.y = .5;
-						scene.add(particleSystem);
-
-						count++;
-					}
+					if (rooms[c].object == null || rooms[c].object.material != rooms[c].materials[0])
+						return false;
 				}
-				if (count >= rooms.length) {
-					score.innerHTML = "";
-					alert("YOU WON!!!!");
-					menu = true;
-					runGen(gen_menu);
-					return true;
-				}
-				score.innerHTML = ""+count+" / "+rooms.length;
-				return false;
+				alert("YOU WON!!!!");
+				menu = true;
+				runGen(gen_menu);
 			}
 
 			function runGen(generate) {
@@ -297,8 +280,6 @@
 				camera.position.x = 0;
 				camera.position.y = 2.6;
 				camera.position.z = 0;
-				camera.rotation.y = 0;
-				camera.rotation.x = 0;
 
 				radius = 10;
 
