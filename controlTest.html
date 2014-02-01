@@ -118,7 +118,7 @@
 						&& rebuild(3) ) {
 							if((menu)) {
 								menu = false;
-								runGen(gen_3);
+								runGen(gen_test_6_2);
 							} else {
 								camera.position.x = -ROOM_OFFSET + ROOM_TOLERANCE;
 							}
@@ -132,7 +132,7 @@
 						&& rebuild(1) ) {
 							if(menu) {
 								menu = false;
-								runGen(gen_1);
+								runGen(gen_test_6_2);
 							} else {
 								camera.position.x = ROOM_OFFSET - ROOM_TOLERANCE;
 							}
@@ -156,7 +156,7 @@
 						&& rebuild(0) ) {
 							if((menu)  && oldAngle == 2) {
 								menu = false;
-								runGen(gen_2);
+								runGen(gen_test_6_2);
 							} else {
 								camera.position.z = ROOM_OFFSET - ROOM_TOLERANCE;
 							}
@@ -230,8 +230,11 @@
 						return false;
 				}
 				alert("YOU WON!!!!");
-				menu = true;
-				runGen(gen_menu);
+
+				rooms = gen_test_6_2();
+				theRoom = rooms[0];
+				rebuild(0);
+				return true;
 			}
 
 			function runGen(generate) {
