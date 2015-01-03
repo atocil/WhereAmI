@@ -3,4 +3,4 @@ WhereAmI
 
 Non-euclidian Geometry Game
 
-Now hosted at [wizardlabs](http://wizardlabs.me/WhereAmI/)
+Now hosted at [wizardlabs](https://wizardlabs.me/WhereAmI/)
